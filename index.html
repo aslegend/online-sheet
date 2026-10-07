@@ -1,0 +1,536 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>html{color-scheme:light}body{margin:0}[hidden]{display:none!important}</style>
+<title>독자를 고려하며 글쓰기</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+/* Layout: 고정 상단바(한 줄 헤더 + 활동 바로가기) 아래에 모든 활동 상자가 한 화면에 이어서 쌓이는 세로 문서형 */
+:root{
+  --bg:#f1f7ee; --card:#ffffff; --ink:#1e3226; --mute:#587063; --line:#cde0cd;
+  --accent:#2c9a5c; --accent-ink:#ffffff; --accent-soft:#dff1e4;
+  --warm:#f2a233; --warm-soft:#fff0d3; --blue:#3b79b8; --blue-soft:#e3eefa;
+  --navy:#2a3563; --red:#d1233f; --red-soft:#fff0f2; --ok:#1f8f4f; --bad:#d1233f;
+  --me:#fff6d6; --bar:#ffffffee; --s1:#79b4dc; --s2:#8cc97b; --s3:#f0be5a;
+  --display:'Jua','Noto Sans KR',system-ui,sans-serif; --body:'Noto Sans KR',system-ui,-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111a14; --card:#1a261e; --ink:#e6f1e9; --mute:#9bb2a3; --line:#2c4235;
+  --accent:#4cc183; --accent-ink:#0c1f14; --accent-soft:#1f3b2c;
+  --warm:#f1b35a; --warm-soft:#3a2f17; --blue:#86b8ec; --blue-soft:#1c2f44;
+  --navy:#3d4a86; --red:#ff8a9b; --red-soft:#3a1d24; --ok:#5fd596; --bad:#ff8a9b;
+  --me:#3b3516; --bar:#1a261eee; --s1:#4f8bb5; --s2:#5e9a52; --s3:#c7973a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111a14; --card:#1a261e; --ink:#e6f1e9; --mute:#9bb2a3; --line:#2c4235;
+  --accent:#4cc183; --accent-ink:#0c1f14; --accent-soft:#1f3b2c;
+  --warm:#f1b35a; --warm-soft:#3a2f17; --blue:#86b8ec; --blue-soft:#1c2f44;
+  --navy:#3d4a86; --red:#ff8a9b; --red-soft:#3a1d24; --ok:#5fd596; --bad:#ff8a9b;
+  --me:#3b3516; --bar:#1a261eee; --s1:#4f8bb5; --s2:#5e9a52; --s3:#c7973a; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6;padding-inline:16px;padding-block:0 60px;-webkit-tap-highlight-color:transparent}
+button,textarea,input{font:inherit;color:inherit}
+.wrap{max-width:980px;margin:0 auto}
+
+/* login */
+#login{min-height:100dvh;display:grid;place-items:center;padding-block:24px}
+.lg{background:var(--card);border:2px solid var(--line);border-radius:22px;padding:28px 22px;width:min(420px,100%);text-align:center;display:flex;flex-direction:column;gap:14px}
+.lg .big{font-size:56px;line-height:1}
+.lg h1{font-family:var(--display);font-weight:400;font-size:28px;margin:0}
+.lg p{margin:0;color:var(--mute)}
+.lg input{height:56px;border-radius:14px;border:2px solid var(--line);background:var(--bg);text-align:center;font-size:22px;padding:0 12px;width:100%}
+.lg input:focus{outline:3px solid var(--accent);border-color:var(--accent)}
+.err{color:var(--bad);min-height:1.4em;font-weight:700;font-size:15px}
+
+/* top bar */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bar);backdrop-filter:blur(8px);margin-inline:-16px;padding-inline:16px;border-bottom:2px solid var(--line)}
+.hd{display:flex;align-items:center;gap:8px;height:48px;flex-wrap:nowrap}
+.hd h1{font-family:var(--display);font-weight:400;font-size:20px;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:0 1 auto}
+.hd .who{background:var(--accent-soft);border-radius:999px;padding:2px 12px;font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:0 1 auto}
+.hd .sp{flex:1}
+.hd button{min-height:36px;border-radius:10px;border:2px solid var(--line);background:var(--card);padding:0 10px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap}
+.hd button.danger{border-color:var(--bad);color:var(--bad)}
+.nav{display:flex;gap:6px;overflow-x:auto;padding-block:0 8px;scrollbar-width:thin}
+.nav a{flex:none;text-decoration:none;color:var(--ink);background:var(--card);border:2px solid var(--line);border-radius:999px;padding:3px 12px;font-size:14px;font-weight:700;min-height:34px;display:flex;align-items:center;gap:4px}
+.nav a.done{background:var(--accent-soft);border-color:var(--accent)}
+
+/* cards */
+#cards{display:flex;flex-direction:column;gap:18px;padding-block:18px}
+.card{scroll-margin-top:104px;background:var(--card);border:2px solid var(--line);border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.ch{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ch .no{background:var(--accent);color:var(--accent-ink);font-family:var(--display);width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-size:20px;flex:none}
+.ch h2{font-family:var(--display);font-weight:400;font-size:21px;margin:0;flex:1;min-width:0;text-wrap:balance}
+.ch .pg{font-size:13px;color:var(--mute);border:1px solid var(--line);border-radius:8px;padding:0 8px}
+.ch .st{font-size:13px;font-weight:700;border-radius:999px;padding:1px 10px;background:var(--warm-soft)}
+.ch .st.ok{background:var(--accent-soft);color:var(--ok)}
+.task{font-weight:700;margin:0}
+.passage{background:var(--accent-soft);border-radius:14px;padding:12px 14px;margin:0}
+.passage h3{margin:0 0 4px;font-family:var(--display);font-weight:400;font-size:18px;text-align:center}
+.passage p{margin:0}
+.bub{display:flex;flex-wrap:wrap;gap:8px}
+.bub div{flex:1 1 220px;background:var(--blue-soft);border-radius:16px;padding:8px 12px;font-size:15px;position:relative;min-width:0}
+.bub div b{display:block;font-size:13px;color:var(--blue)}
+.stage{background:var(--warm-soft);border-radius:14px;padding:10px 14px}
+.stage h3{margin:0;font-family:var(--display);font-weight:400;font-size:18px}
+.stage p{margin:2px 0 6px}
+.q{font-weight:700;display:block;margin-top:4px}
+textarea{width:100%;min-height:68px;resize:vertical;border:2px solid var(--line);border-radius:12px;background:var(--bg);padding:10px 12px;line-height:1.5}
+textarea:focus{outline:3px solid var(--accent);border-color:var(--accent)}
+textarea[readonly]{background:var(--accent-soft);border-style:dashed}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{min-height:50px;padding:0 22px;border-radius:14px;border:0;background:var(--accent);color:var(--accent-ink);font-weight:700;font-size:17px;cursor:pointer}
+.btn.edit{background:var(--warm);color:#2b1c00}
+.btn.ghost{background:var(--card);color:var(--ink);border:2px solid var(--line)}
+.btn:active{transform:scale(.97)}
+button:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.ex{border:2px solid var(--red);background:var(--red-soft);border-radius:12px;padding:10px 12px}
+.ex .tag{display:inline-block;background:var(--navy);color:#fff;border-radius:6px;padding:0 8px;font-size:14px;font-weight:700;margin-bottom:4px}
+.ex p{margin:2px 0;color:var(--red);font-weight:700}
+.friends{border-top:2px dashed var(--line);padding-top:10px}
+.friends h3{margin:0 0 8px;font-size:16px}
+.fl{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}
+.fi{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:8px 10px;min-width:0;overflow-wrap:anywhere}
+.fi.me{background:var(--me);border-color:var(--warm)}
+.fi b{display:block;font-size:14px;color:var(--mute)}
+.empty{color:var(--mute);font-size:15px;margin:0}
+
+
+.art{display:flex;justify-content:center}
+.art svg{width:100%;max-width:480px;height:auto;border-radius:14px;background:var(--blue-soft)}
+/* pie */
+.pie{display:flex;gap:14px;flex-wrap:wrap;align-items:center;background:var(--blue-soft);border-radius:14px;padding:12px}
+.pie svg{width:170px;max-width:100%;height:auto;flex:none}
+.pie path{cursor:pointer;stroke:var(--card);stroke-width:2;transition:transform .15s}
+.pie path.sel{transform:scale(1.06);transform-origin:100px 100px}
+.pie .info{flex:1 1 200px;min-width:0}
+.pie .info h4{margin:0 0 6px;font-size:15px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{min-height:44px;padding:0 16px;border-radius:999px;border:2px solid var(--blue);background:var(--card);font-weight:700;cursor:pointer}
+.chip.on{background:var(--blue);color:var(--card)}
+.sw{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px}
+.rules{margin:6px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:2px;font-size:15px}
+
+/* fill blanks */
+.fill{display:flex;flex-direction:column;gap:10px}
+.fill p{margin:0;line-height:2.3}
+.blank{min-width:92px;min-height:44px;border:2px dashed var(--blue);border-radius:10px;background:var(--bg);font-weight:700;padding:0 10px;cursor:pointer;vertical-align:middle}
+.blank.has{border-style:solid;background:var(--blue-soft)}
+.blank.right{border-color:var(--ok)}
+.blank.wrong{border-color:var(--bad)}
+.blank:disabled{opacity:1;cursor:default}
+
+/* quiz */
+.qz{border:2px solid var(--line);border-radius:14px;padding:10px 12px}
+.qz h3{margin:0 0 6px;font-size:17px}
+.opts{display:grid;gap:8px}
+.opt{text-align:left;min-height:48px;border-radius:12px;border:2px solid var(--line);background:var(--bg);padding:6px 12px;cursor:pointer;display:flex;gap:8px;align-items:flex-start}
+.opt.on{border-color:var(--blue);background:var(--blue-soft)}
+.opt.right{border-color:var(--ok);background:var(--accent-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--red-soft)}
+.opt:disabled{opacity:1;cursor:default}
+.score{font-weight:700;background:var(--warm-soft);border-radius:12px;padding:8px 12px}
+
+/* monitor */
+.tw{overflow-x:auto;border:2px solid var(--line);border-radius:12px}
+table{border-collapse:collapse;width:100%;min-width:760px;font-size:15px}
+th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:center;white-space:nowrap}
+th{background:var(--accent-soft);position:sticky;top:0}
+td:first-child,th:first-child{text-align:left;font-weight:700}
+td.num{font-variant-numeric:tabular-nums}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;font-weight:700;z-index:50;max-width:92vw;text-align:center}
+@media (max-width:520px){.hd h1{font-size:17px}.card{padding:12px}body{font-size:16px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+</head><body>
+<div id="login"><div class="lg">
+  <div class="big">✏️📖</div>
+  <h1>독자를 고려하며 글쓰기</h1>
+  <p>이름 세 글자를 입력하고 시작해요!</p>
+  <input id="nm" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="이름 3글자" aria-label="이름">
+  <div class="err" id="nmErr" role="alert"></div>
+  <button class="btn" id="go">🚀 시작하기</button>
+</div></div>
+
+<div id="app" class="wrap" hidden>
+  <div class="top">
+    <div class="hd">
+      <h1>✏️ 독자를 고려하며 글쓰기</h1>
+      <span class="who" id="who"></span>
+      <span id="sync" title="저장 상태">☁️</span>
+      <span class="sp"></span>
+      <button id="out">나가기</button>
+      <button id="reset" class="danger" hidden>🔄 초기화</button>
+    </div>
+    <nav class="nav" id="nav" aria-label="활동 바로가기"></nav>
+  </div>
+  <div id="cards"></div>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(function(){
+'use strict';
+var LOGIN='dokja236_login', LS=function(n){return 'dokja236_state_'+n};
+var $=function(s,r){return (r||document).querySelector(s)}, $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
+var S=null, ADMIN=false, db=null, R={students:[]}, chipSel='', CIRC='①②③④';
+
+/* ---------- 교과서 내용 (236~241쪽) ---------- */
+var ACTS=[
+{id:'a1',no:1,emoji:'🤔',title:'상황을 보고 물음에 답해 봅시다',page:'236쪽',
+ task:'다음 상황을 보고 물음에 답해 봅시다.',
+ body:'<div class="bub"><div><b>🧑‍🏫 글쓴이</b>운동장 놀이를 조사해서 써 봐야지.</div></div>'+
+  '<div class="passage"><h3>운동장 놀이의 좋은 점</h3><p>운동장 놀이는 학생들의 신체 발달과 정서 함양에 긍정적인 영향을 미친다. 어린이들은 신체 활동에 참여하면서 심폐 지구력을 향상할 수 있다.</p></div>'+
+  '<div class="bub"><div><b>🧒 독자 1</b>심폐 지구력은 무슨 뜻일까?</div><div><b>👧 독자 2</b>나는 운동장에서 할 수 있는 놀이 방법에 관심이 있는데 이 글은 관련이 없는 것 같아.</div></div>',
+ fields:['(1) 독자가 글을 읽고 어려워하는 까닭은 무엇일까요?','(2) 글을 쓸 때 어떤 점을 고려해야 할까요?'],
+ ex:['글에서 이해하기 어려운 낱말이 있습니다. / 독자가 관심이 없는 내용이기 때문에 더욱 이해하기 어렵습니다.','독자가 이해할 수 있는지 생각해야 합니다. / 독자가 읽고 싶은 글인지 생각해야 합니다.'],exLabel:'교과서 예시 답안'},
+{id:'a2',no:2,emoji:'🔁',title:'글을 다시 쓴 상황을 보고 물음에 답해 봅시다',page:'237쪽',
+ task:'글을 다시 쓴 상황을 보고 물음에 답해 봅시다.',
+ body:'<div class="passage"><h3>그림자 술래잡기</h3><p>그림자 술래잡기는 그림자를 밟아 잡는 놀이이다. 먼저 술래를 한 명 정한다. 술래는 친구들의 그림자를 밟으려고 따라다니고, 친구들은 자신의 그림자가 밟히지 않도록 도망 다닌다. 술래가 친구의 그림자를 밟으면 그 친구가 다음 술래가 된다. 햇빛이 있는 장소에서 하면 더욱 재미있게 놀이를 할 수 있다.</p></div>'+
+  '<div class="bub"><div><b>🧒 독자 1</b>낱말이 쉬워서 글 내용을 이해하기 쉬워.</div><div><b>👧 독자 2</b>운동장이나 놀이터에서 할 놀이를 찾고 있었는데 해 보면 재미있을 것 같아.</div></div>',
+ fields:['(1) 새로 쓴 글은 어떤 점이 달라졌나요?','(2) 글을 읽고 독자의 반응이 달라진 까닭은 무엇일까요?'],
+ ex:['독자가 이해하기 쉬운 표현을 썼습니다. / 독자가 관심 있는 것에 대해 썼습니다.','쓰는 사람이 독자를 고려해 글을 썼기 때문입니다.'],exLabel:'교과서 예시 답안'},
+{id:'a3',no:3,emoji:'💬',title:'독자를 고려하며 글을 쓰면 좋은 점 이야기하기',page:'237쪽',
+ task:'독자를 고려하며 글을 쓰면 좋은 점을 친구들과 이야기해 보고, 내 생각을 써 봅시다.',
+ body:'<div class="bub"><div><b>🧑 친구 1</b>글을 쓸 때 독자의 관심사를 고려해서 쓰면 독자가 더 흥미롭게 읽을 수 있어.</div><div><b>🧑 친구 2</b>독자가 무엇을 알고 있는지 생각하면 독자가 이해하기 쉬운 글을 쓸 수 있어.</div></div>',
+ fields:['독자를 고려하며 글을 쓰면 어떤 점이 좋을까요?'],
+ ex:['그림이나 사진, 그래프처럼 독자가 선호하는 보조 자료를 넣으면 이해를 도울 수 있어.'],exLabel:'교과서 예시 답안'},
+{id:'a4',no:4,emoji:'🧭',title:'독자를 고려하며 글을 쓰는 과정 생각하기',page:'238~239쪽',
+ task:'그림을 보고 독자를 고려하며 글을 쓰는 과정을 생각해 봅시다.',
+ body:'<div class="stage"><h3>① 글을 쓸 계획 세우기</h3><p>글을 쓰기 전에 독자가 누구인지, 어떤 문제에 관심이 있고 어떤 어려움을 겪는지 조사한다. 그리고 독자의 관심과 흥미를 끌 수 있는 주제를 정하고, 독자를 고려해 글을 쓸 계획을 세운다.</p></div>'+
+  '<div class="stage"><h3>② 내용 생성 및 조직하기</h3><p>독자의 관심과 흥미를 고려해서 내용을 선정한다. 그리고 독자가 주제에 대해서 얼마나 알고 있는지 생각하며 독자의 이해를 돕고 흥미를 끌 수 있는 자료도 적절히 배치한다.</p></div>'+
+  '<div class="stage"><h3>③ 글을 쓰고 고쳐 쓰기</h3><p>독자가 이해하기 쉬운 표현을 사용해 글을 쓴다. 글을 다 쓴 다음에는 독자가 오해할 만한 부분은 없는지 확인하고 부족한 부분을 수정한다.</p></div>'+
+  '<div class="bub"><div><b>🧒 민준</b>우리 학교 학생들이 안전하게 지내려면 어떻게 해야 할까?</div><div><b>👧 서연</b>학생들이 계단을 뛰어 내려가다가 넘어져 다치는데, 계단을 안전하게 이용하자는 주제로 글을 써 보면 어떨까?</div></div>',
+ fields:['어떤 사람이 우리 글을 읽을까요? (읽는 사람)','그 사람들이 어려움을 겪는 일은 무엇인가요?','읽는 사람의 특성은 무엇인가요?','② 독자를 위해 어떤 내용과 자료를 넣으면 좋을까요?','③ 글을 다 쓴 다음에는 무엇을 확인해야 할까요?'],
+ ex:['우리 ○○초등학교 학생들','안전하게 학교생활하는 방법','우리 학교 학생들은 그림이나 그래프가 있을 때 내용을 더 쉽게 이해함','독자가 평소 관심 있어 하는 것을 조사하고, 이해하기 쉽게 그림이나 그래프로 제시한다. / 안전하게 지켜야 할 행동을 잘 정리해서 제시한다.','독자가 이해하기 쉬운 표현을 썼는지, 오해할 만한 부분은 없는지 확인하고 부족한 부분을 고쳐 쓴다.'],exLabel:'교과서 내용'},
+{id:'a5',no:5,emoji:'🪜',title:'「계단을 안전하게 이용합시다」를 읽고 물음에 답해 봅시다',page:'240~241쪽',
+ task:'4를 바탕으로 쓴 「계단을 안전하게 이용합시다」를 읽고 물음에 답해 봅시다.',
+ pie:true,
+ body:'<div class="passage"><h3>계단을 안전하게 이용합시다</h3><p>여러분, 계단은 우리가 위층과 아래층으로 이동할 때 자주 이용하는 시설입니다. 하지만 최근 우리 학교 계단에서 넘어져 다치는 안전사고가 늘고 있습니다. 우리 학교 정문에서 등교하는 학생 50명을 대상으로 조사한 결과, 40명이나 계단에서 위험한 상황을 겪은 것으로 나타났습니다. 계단에서 뛰어다니거나 장난을 치면 미끄러지거나 넘어져서 크게 다칠 수 있으니 조심해야 합니다. 우리 모두 계단을 안전하게 이용합시다.</p></div>'+
+  '@@PIE@@'+
+  '<div class="stage"><h3>⭐ ○○초등학교 학생들은 다음의 내용을 꼭 기억해 주세요 ⭐</h3><ul class="rules"><li>⭐ <b>뛰지 말고 천천히 걸어요!</b> 계단에서 뛰면 넘어질 위험이 커져요. 천천히 한 걸음씩 이동해요.</li><li>⭐ <b>필요할 때에는 계단 난간을 잡아요!</b> 몸이 불편하거나 사람이 많을 때에는 계단 난간을 잡는 것이 안전해요.</li><li>⭐ <b>앞을 잘 보고 걸어요!</b> 휴대 전화나 다른 것에 주의를 빼앗기지 말고 계단을 잘 살펴보며 걸어요.</li></ul><p>계단에서 천천히 걷고 주의를 기울이면 계단을 안전하게 이용할 수 있습니다. — ○○초등학교 전교 어린이회</p></div>',
+ fields:['(1) 글쓴이는 우리 학교 학생들에게 어떤 의견을 조사했나요?','(2) 글쓴이는 계단을 안전하게 이용하기 위해 어떤 일을 지키자고 했나요?'],
+ ex:['실제로 계단에서 위험했던 적이 있는지 조사했습니다.','뛰지 말고 천천히 걷자고 했습니다. / 필요할 때에는 난간을 잡자고 했습니다. / 계단을 잘 살펴보며 걷자고 했습니다.'],exLabel:'교과서 예시 답안'},
+{id:'a6',no:6,emoji:'🌟',title:'독자를 고려한 점의 효과 이야기하기',page:'241쪽',
+ task:'「계단을 안전하게 이용합시다」를 읽고 독자를 고려한 점이 어떤 효과가 있는지 친구들과 이야기해 봅시다.',
+ body:'<div class="bub"><div><b>👧 친구 1</b>조사 결과를 그래프로 보여 주어서 한눈에 보기 좋아. ○○초등학교 학생들이 그래프를 보며 내용을 쉽게 이해할 수 있었을 거야.</div><div><b>🧒 친구 2</b>별표 기호를 활용해서 안전 수칙을 나누어 보여 주니까 기억하기도 쉬워. 어린 동생들도 읽고 오래 기억할 수 있을 거야.</div></div>',
+ fields:['독자를 고려한 점은 어떤 효과가 있나요? 나의 생각을 써 봅시다.'],
+ ex:['학생들은 학교에서 안전하게 다니는 것에 관심이 많기 때문에 주의 깊게 이 글을 읽을 거야.'],exLabel:'교과서 예시 답안'},
+{id:'a7',no:7,emoji:'🧩',title:'보기에서 알맞은 말을 찾아 정리해 봅시다',page:'241쪽',
+ task:'보기에서 알맞은 말을 찾아 써서 독자를 고려하며 글을 쓰는 방법을 정리해 봅시다. 낱말을 누른 다음 빈칸을 눌러요.',
+ blanks:true,answers:['흥미','주제','이해'],
+ sent:[['글을 쓰기 전에 독자의 ',0,'나 관심사, 겪고 있는 문제 같은 것을 조사한다.'],['독자의 관심과 흥미를 끌 수 있는 ',1,'와 내용을 정한다.'],['글을 쓰고 고쳐 쓸 때에는 독자가 ',2,'하기 쉬운 표현인지, 오해할 만한 표현은 없는지 생각한다.']],
+ ex:['① 흥미','② 주제','③ 이해'],exLabel:'교과서 예시 답안'}
+];
+var QZ=[
+{q:'글을 쓸 때 가장 먼저 생각해야 할 것은 무엇일까요?',o:['글씨를 얼마나 예쁘게 쓰는지','독자가 이해할 수 있는지, 읽고 싶은 글인지','글을 얼마나 길게 쓰는지','어려운 낱말을 얼마나 많이 쓰는지'],a:1},
+{q:'글을 쓸 계획을 세울 때 먼저 조사해야 할 것은 무엇일까요?',o:['글쓴이가 좋아하는 놀이','글을 쓸 종이의 크기','독자가 누구인지, 어떤 일에 관심이 있고 어떤 어려움을 겪는지','글을 몇 분 만에 쓸 수 있는지'],a:2},
+{q:'내용을 만들고 조직할 때 독자를 고려한 방법으로 알맞은 것은 무엇일까요?',o:['독자의 이해를 돕고 흥미를 끌 수 있는 그림이나 그래프를 알맞게 넣는다.','글쓴이만 아는 낱말을 많이 쓴다.','독자가 관심 없는 내용을 길게 쓴다.','자료를 하나도 넣지 않는다.'],a:0},
+{q:'글을 다 쓴 다음에 해야 할 일로 알맞은 것은 무엇일까요?',o:['바로 제출한다.','글자 수만 세어 본다.','처음부터 다른 글을 쓴다.','독자가 오해할 만한 부분은 없는지 확인하고 부족한 부분을 고쳐 쓴다.'],a:3},
+{q:'「계단을 안전하게 이용합시다」에서 글쓴이가 독자를 고려한 방법으로 알맞은 것은 무엇일까요?',o:['어려운 낱말만 사용했다.','조사 결과를 그래프로 보여 주고, 별표 기호로 안전 수칙을 나누어 보여 주었다.','계단과 관계없는 놀이를 소개했다.','독자가 누구인지 생각하지 않고 글을 썼다.'],a:1}
+];
+var ITEMS=['a1','a2','a3','a4','a5','a6','a7','quiz','ref'];
+var ITEM_NAME={a1:'활동1',a2:'활동2',a3:'활동3',a4:'활동4',a5:'활동5',a6:'활동6',a7:'활동7',quiz:'형성평가',ref:'느낀 점'};
+
+/* ---------- 상태 ---------- */
+function clone(x){return JSON.parse(JSON.stringify(x))}
+function hexId(n){return 'u'+Array.from(n).map(function(c){return c.codePointAt(0).toString(16)}).join('-')}
+function freshState(name){return {name:name,drafts:{},saved:{},editing:{},resetSeen:0}}
+function loadState(name){try{var r=localStorage.getItem(LS(name));if(r){var o=JSON.parse(r);if(o&&o.saved)return Object.assign(freshState(name),o)}}catch(e){}return freshState(name)}
+function saveLocal(){try{localStorage.setItem(LS(S.name),JSON.stringify(S))}catch(e){}}
+function nFields(id){if(id==='quiz')return QZ.length;if(id==='ref')return 1;if(id==='a7')return 3;return ACTS.filter(function(a){return a.id===id})[0].fields.length}
+function blankDraft(id){var n=nFields(id);return Array.from({length:n},function(){return id==='quiz'?-1:''})}
+function draft(id){if(!S.drafts[id]){S.drafts[id]=S.saved[id]?clone(S.saved[id].v):blankDraft(id)}return S.drafts[id]}
+function editable(id){return !ADMIN&&(!S.saved[id]||!!S.editing[id])}
+function joinText(id,v){if(id==='quiz')return v.map(function(x,i){return (i+1)+'번 '+(x>=0?CIRC[x]:'-')}).join(', ');return v.map(function(x){return String(x).trim()}).filter(Boolean).join(', ')}
+function toast(m){var t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(toast.h);toast.h=setTimeout(function(){t.hidden=true},2200)}
+function setSync(k){var e=$('#sync');e.textContent=k==='err'?'⚠️':(k==='local'?'📴':'☁️');e.title=k==='err'?'공유 저장소 저장에 실패했어요. 이 기기에는 저장되어 있어요.':(k==='local'?'이 기기에만 저장 중':'공유 저장소에 저장됨')}
+
+/* ---------- 화면 만들기 ---------- */
+function pieHtml(){return '<div class="pie"><svg viewBox="0 0 200 200" role="img" aria-label="계단에서 위험한 상황을 겪은 적이 있습니까? 원그래프">'+
+  '<path id="p0" data-s="0"></path><path id="p1" data-s="1"></path><path id="p2" data-s="2"></path></svg>'+
+  '<div class="info"><h4>📊 계단에서 위험한 상황을 겪은 적이 있습니까? (50명)</h4><div class="chips" id="pieChips"></div><p id="pieInfo" class="empty" style="margin-top:8px">그래프나 낱말을 눌러 보세요.</p></div></div>'}
+var PIE=[['있다',40,'--s1'],['거의 없다',6,'--s2'],['없다',4,'--s3']];
+function initPie(){
+  var tot=50,a=-Math.PI/2;
+  PIE.forEach(function(p,i){var b=a+p[1]/tot*2*Math.PI,x1=100+80*Math.cos(a),y1=100+80*Math.sin(a),x2=100+80*Math.cos(b),y2=100+80*Math.sin(b);
+    var el=$('#p'+i);el.setAttribute('d','M100 100 L'+x1.toFixed(2)+' '+y1.toFixed(2)+' A80 80 0 '+(p[1]/tot>.5?1:0)+' 1 '+x2.toFixed(2)+' '+y2.toFixed(2)+' Z');el.style.fill='var('+p[2]+')';a=b});
+  $('#pieChips').innerHTML=PIE.map(function(p,i){return '<button class="chip" data-s="'+i+'"><span class="sw" style="background:var('+p[2]+')"></span>'+p[0]+' '+p[1]+'명</button>'}).join('');
+}
+function selPie(i){PIE.forEach(function(p,j){$('#p'+j).classList.toggle('sel',i===j)});var p=PIE[i];$('#pieInfo').textContent=p[0]+': '+p[1]+'명 → 전체 50명 중 '+(p[1]/50*100)+'% 예요.'+(i===0?' 우리 학교 학생 대부분이 위험한 상황을 겪었어요!':'')}
+
+/* ---------- 직접 그린 삽화 ---------- */
+var SKIN='#ffd9b8';
+function kid(x,b,shirt,hair,o){o=o||{};var g='';
+  g+='<rect x="'+(x-10)+'" y="'+(b-12)+'" width="8" height="12" rx="3" style="fill:#4a5a7a"/><rect x="'+(x+2)+'" y="'+(b-12)+'" width="8" height="12" rx="3" style="fill:#4a5a7a"/>';
+  if(o.arm==='up')g+='<line x1="'+(x+13)+'" y1="'+(b-40)+'" x2="'+(x+26)+'" y2="'+(b-60)+'" stroke="'+SKIN+'" stroke-width="6" stroke-linecap="round"/>';
+  if(o.arm==='point')g+='<line x1="'+(x+13)+'" y1="'+(b-38)+'" x2="'+(x+34)+'" y2="'+(b-46)+'" stroke="'+SKIN+'" stroke-width="6" stroke-linecap="round"/>';
+  g+='<rect x="'+(x-15)+'" y="'+(b-48)+'" width="30" height="38" rx="12" style="fill:'+shirt+'"/>';
+  g+='<circle cx="'+x+'" cy="'+(b-62)+'" r="15" fill="'+SKIN+'"/>';
+  g+='<path d="M'+(x-15)+' '+(b-64)+' A15 15 0 0 1 '+(x+15)+' '+(b-64)+' Z" fill="'+hair+'"/>';
+  if(o.girl)g+='<circle cx="'+(x-17)+'" cy="'+(b-56)+'" r="5" fill="'+hair+'"/><circle cx="'+(x+17)+'" cy="'+(b-56)+'" r="5" fill="'+hair+'"/>';
+  g+='<circle cx="'+(x-5)+'" cy="'+(b-61)+'" r="1.8" fill="#222"/><circle cx="'+(x+5)+'" cy="'+(b-61)+'" r="1.8" fill="#222"/>';
+  g+='<path d="M'+(x-4)+' '+(b-55)+' Q'+x+' '+(b-51)+' '+(x+4)+' '+(b-55)+'" stroke="#c0504d" stroke-width="1.6" fill="none" stroke-linecap="round"/>';
+  g+='<circle cx="'+(x-9)+'" cy="'+(b-56)+'" r="2.6" fill="#ff9a9a" opacity=".55"/><circle cx="'+(x+9)+'" cy="'+(b-56)+'" r="2.6" fill="#ff9a9a" opacity=".55"/>';
+  return g}
+function bub(x,y,t){return '<ellipse cx="'+x+'" cy="'+y+'" rx="17" ry="13" style="fill:var(--card);stroke:var(--line)" stroke-width="2"/><text x="'+x+'" y="'+(y+6)+'" text-anchor="middle" font-size="17" font-weight="700" style="fill:var(--ink)">'+t+'</text>'}
+function ground(y){return '<rect x="0" y="'+y+'" width="360" height="'+(150-y)+'" style="fill:var(--accent-soft)"/>'}
+function svg(inner){return '<svg viewBox="0 0 360 150" role="img" aria-hidden="true">'+inner+'</svg>'}
+var C={b:'var(--blue)',w:'var(--warm)',a:'var(--accent)',r:'var(--red)'};
+var SCENES={
+ s1:function(){return svg(ground(118)+
+   '<rect x="30" y="96" width="92" height="8" rx="3" style="fill:var(--warm)"/><rect x="38" y="104" width="6" height="14" style="fill:var(--warm)"/><rect x="108" y="104" width="6" height="14" style="fill:var(--warm)"/>'+
+   '<path d="M52 96 L76 90 L100 96 L76 100 Z" style="fill:var(--card);stroke:var(--line)" stroke-width="2"/>'+
+   kid(76,96,C.b,'#5a3b2b',{})+bub(120,28,'?')+
+   kid(220,126,C.w,'#2a2a2a',{girl:1})+bub(250,50,'?')+kid(290,126,C.a,'#6b4a2f',{})+bub(318,52,'…'))},
+ s2:function(){return svg(ground(110)+
+   '<circle cx="40" cy="30" r="16" style="fill:var(--warm)"/>'+
+   '<ellipse cx="170" cy="130" rx="28" ry="6" style="fill:#000" opacity=".18"/><ellipse cx="270" cy="132" rx="26" ry="6" style="fill:#000" opacity=".18"/>'+
+   kid(130,122,C.r,'#2a2a2a',{arm:'up'})+kid(235,124,C.b,'#5a3b2b',{girl:1,arm:'up'})+
+   '<text x="180" y="40" text-anchor="middle" font-size="14" font-weight="700" style="fill:var(--ink)">잡았다!</text>')},
+ s3:function(){return svg(ground(118)+
+   kid(70,128,C.a,'#2a2a2a',{girl:1})+bub(70,34,'!')+kid(180,128,C.b,'#3a2a22',{})+bub(180,34,'♪')+kid(290,128,C.w,'#6b4a2f',{girl:1})+bub(290,34,'♥'))},
+ s4:function(){return svg(ground(118)+
+   '<rect x="40" y="100" width="280" height="9" rx="3" style="fill:var(--warm)"/><rect x="52" y="109" width="6" height="12" style="fill:var(--warm)"/><rect x="302" y="109" width="6" height="12" style="fill:var(--warm)"/>'+
+   kid(110,100,C.b,'#5a3b2b',{})+kid(250,100,C.a,'#2a2a2a',{girl:1})+
+   '<rect x="150" y="86" width="60" height="14" rx="2" style="fill:var(--card);stroke:var(--line)" stroke-width="2"/><rect x="158" y="90" width="10" height="8" style="fill:var(--s1)"/><rect x="172" y="93" width="10" height="5" style="fill:var(--s2)"/><rect x="186" y="88" width="10" height="10" style="fill:var(--s3)"/>'+
+   '<circle cx="180" cy="34" r="13" style="fill:var(--warm-soft);stroke:var(--warm)" stroke-width="2"/><text x="180" y="40" text-anchor="middle" font-size="16" style="fill:var(--ink)">💡</text>')},
+ s5:function(){return svg(ground(122)+
+   '<polygon points="60,122 60,104 110,104 110,86 160,86 160,68 210,68 210,50 260,50 260,122" style="fill:var(--card);stroke:var(--line)" stroke-width="2"/>'+
+   '<line x1="60" y1="96" x2="260" y2="34" stroke="var(--blue)" stroke-width="4" stroke-linecap="round"/>'+
+   kid(185,86,C.w,'#2a2a2a',{girl:1})+
+   '<rect x="270" y="70" width="80" height="40" rx="8" style="fill:var(--warm-soft);stroke:var(--warm)" stroke-width="2"/><text x="310" y="95" text-anchor="middle" font-size="14" font-weight="700" style="fill:var(--ink)">천천히 ⭐</text>')},
+ s6:function(){return svg(ground(118)+
+   '<rect x="210" y="22" width="130" height="80" rx="8" style="fill:var(--card);stroke:var(--line)" stroke-width="2"/>'+
+   '<circle cx="250" cy="62" r="24" style="fill:var(--s1)"/><path d="M250 62 L250 38 A24 24 0 0 1 274 62 Z" style="fill:var(--s3)"/>'+
+   '<rect x="290" y="54" width="10" height="36" style="fill:var(--s2)"/><rect x="305" y="44" width="10" height="46" style="fill:var(--s1)"/><rect x="320" y="64" width="10" height="26" style="fill:var(--s3)"/>'+
+   kid(80,128,C.a,'#5a3b2b',{arm:'point'})+kid(160,128,C.r,'#2a2a2a',{girl:1}))},
+ s7:function(){return svg(ground(118)+
+   '<rect x="40" y="40" width="80" height="50" rx="10" style="fill:var(--s1)"/><text x="80" y="72" text-anchor="middle" font-size="22" font-weight="700" style="fill:#fff">주제</text>'+
+   '<rect x="140" y="40" width="80" height="50" rx="10" style="fill:var(--s3)"/><text x="180" y="72" text-anchor="middle" font-size="22" font-weight="700" style="fill:#222">흥미</text>'+
+   '<rect x="240" y="40" width="80" height="50" rx="10" style="fill:var(--s2)"/><text x="280" y="72" text-anchor="middle" font-size="22" font-weight="700" style="fill:#222">이해</text>'+
+   '<line x1="124" y1="65" x2="136" y2="65" stroke="var(--ink)" stroke-width="3"/><line x1="224" y1="65" x2="236" y2="65" stroke="var(--ink)" stroke-width="3"/>')}
+};
+var SC={a1:'s1',a2:'s2',a3:'s3',a4:'s4',a5:'s5',a6:'s6',a7:'s7'};
+
+function cardHtml(a){
+  var head='<header class="ch"><span class="no">'+a.no+'</span><h2>'+a.emoji+' '+esc(a.title)+'</h2><span class="pg">'+a.page+'</span><span class="st" data-st></span></header><p class="task">'+esc(a.task)+'</p><div class="art">'+SCENES[SC[a.id]]()+'</div>';
+  var body=(a.body||'').replace('@@PIE@@',a.pie?pieHtml():'');
+  var qs='';
+  if(a.blanks){
+    qs='<div class="fill"><div class="chips" id="fillChips">'+['주제','흥미','이해'].map(function(w){return '<button class="chip" data-chip="'+w+'">'+w+'</button>'}).join('')+'</div>'+
+      a.sent.map(function(s){return '<p>'+esc(s[0])+'<button class="blank" data-blank="'+s[1]+'" aria-label="빈칸 '+(s[1]+1)+'">　</button>'+esc(s[2])+'</p>'}).join('')+'</div>';
+  }else{
+    qs=a.fields.map(function(f,i){return '<label class="q" for="'+a.id+'-'+i+'">'+esc(f)+'</label><textarea id="'+a.id+'-'+i+'" data-a="'+a.id+'" data-i="'+i+'" rows="2" placeholder="여기에 써 보세요"></textarea>'}).join('');
+  }
+  var ex='<div class="ex" id="ex-'+a.id+'" hidden><span class="tag">'+a.exLabel+'</span>'+a.ex.map(function(t){return '<p>'+esc(t)+'</p>'}).join('')+'</div>';
+  return '<section class="card" id="c-'+a.id+'" data-id="'+a.id+'">'+head+body+qs+
+    '<div class="actions"><button class="btn" data-save="'+a.id+'">💾 저장</button><button class="btn ghost" data-ex="'+a.id+'" hidden>📖 '+a.exLabel+' 보기</button></div>'+ex+
+    '<div class="friends" id="fr-'+a.id+'"></div></section>';
+}
+function quizHtml(){
+  var qs=QZ.map(function(q,i){return '<div class="qz"><h3>'+(i+1)+'. '+esc(q.q)+'</h3><div class="opts">'+q.o.map(function(o,j){return '<button class="opt" data-q="'+i+'" data-o="'+j+'"><b>'+CIRC[j]+'</b><span>'+esc(o)+'</span></button>'}).join('')+'</div></div>'}).join('');
+  return '<section class="card" id="c-quiz" data-id="quiz"><header class="ch"><span class="no">✔</span><h2>📝 형성평가</h2><span class="pg">5문제</span><span class="st" data-st></span></header><p class="task">알맞은 답을 하나씩 골라 보세요.</p>'+qs+
+    '<div class="score" id="qzScore" hidden></div><div class="actions"><button class="btn" data-save="quiz">💾 저장</button></div></section>';
+}
+function refHtml(){
+  return '<section class="card" id="c-ref" data-id="ref"><header class="ch"><span class="no">💭</span><h2>느낀 점이나 알게 된 점</h2><span class="st" data-st></span></header><p class="task">이번 수업에서 느낀 점이나 알게 된 점을 써 봅시다.</p>'+
+    '<textarea id="ref-0" data-a="ref" data-i="0" rows="4" placeholder="느낀 점이나 알게 된 점을 자유롭게 써 보세요"></textarea>'+
+    '<div class="actions"><button class="btn" data-save="ref">💾 저장</button></div><div class="friends" id="fr-ref"></div></section>';
+}
+function monHtml(){
+  return '<section class="card" id="c-mon"><header class="ch"><span class="no">📋</span><h2>학생별 활동 현황</h2><span class="pg" id="monCnt"></span></header><div class="tw"><table><thead><tr><th>이름</th>'+ITEMS.map(function(k){return '<th>'+ITEM_NAME[k]+'</th>'}).join('')+'<th>진행</th></tr></thead><tbody id="monBody"></tbody></table></div><p class="empty">형성평가 칸에는 맞힌 개수와 틀린 문제 번호가 표시돼요.</p></section>';
+}
+function buildApp(){
+  $('#cards').innerHTML=ACTS.map(cardHtml).join('')+quizHtml()+refHtml()+(ADMIN?monHtml():'');
+  $('#nav').innerHTML=ITEMS.map(function(k){return '<a href="#c-'+k+'" data-nav="'+k+'">'+ITEM_NAME[k]+'</a>'}).join('')+(ADMIN?'<a href="#c-mon">📋 현황</a>':'');
+  $('#who').textContent=S.name+' 님';
+  $('#reset').hidden=!ADMIN;
+  initPie();
+  ITEMS.forEach(refreshCard);
+  renderFriends();renderMonitor();
+}
+
+/* ---------- 새로 그리기 ---------- */
+function refreshCard(id){
+  var c=$('#c-'+id);if(!c)return;
+  var ed=editable(id),sv=!!S.saved[id],d=draft(id);
+  var st=$('[data-st]',c);st.textContent=sv?'✅ 저장됨':'✏️ 작성 중';st.className='st'+(sv?' ok':'');
+  var btn=$('[data-save]',c);btn.hidden=ADMIN;btn.className='btn'+(!ed?' edit':'');btn.textContent=ed?'💾 저장':'✏️ 수정';
+  $$('textarea',c).forEach(function(t){var v=d[+t.dataset.i]||'';if(document.activeElement!==t&&t.value!==v)t.value=v;t.readOnly=!ed});
+  var exb=$('[data-ex]',c);if(exb){exb.hidden=!(sv||ADMIN)}
+  var exs=$('#ex-'+id);if(exs&&!(sv||ADMIN))exs.hidden=true;
+  if(id==='a7'){
+    var A=ACTS[6].answers;
+    $$('.blank',c).forEach(function(b){var i=+b.dataset.blank,v=d[i];b.textContent=v||'　';b.className='blank'+(v?' has':'');b.disabled=!ed;
+      if(sv&&!ed){b.classList.add(v===A[i]?'right':'wrong');b.textContent=(v||'　')+(v===A[i]?' ✅':' ❌')}});
+    $$('[data-chip]',c).forEach(function(b){b.classList.toggle('on',ed&&chipSel===b.dataset.chip);b.disabled=!ed});
+  }
+  if(id==='quiz'){
+    $$('.opt',c).forEach(function(b){var q=+b.dataset.q,o=+b.dataset.o,sel=d[q]===o;b.className='opt';b.disabled=!ed;
+      if(sv&&!ed){if(QZ[q].a===o)b.classList.add('right');else if(sel)b.classList.add('wrong')}else if(sel)b.classList.add('on')});
+    var sc=$('#qzScore');if(sv&&!ed){var w=S.saved.quiz.wrong||[];sc.hidden=false;sc.textContent='🎉 5문제 중 '+(5-w.length)+'문제를 맞혔어요!'+(w.length?' 다시 살펴볼 문제: '+w.join('번, ')+'번':' 모두 정답이에요!')}else sc.hidden=true;
+  }
+  var nv=$('[data-nav="'+id+'"]');if(nv)nv.classList.toggle('done',sv);
+}
+function entries(id){
+  var out=[];
+  R.students.forEach(function(s){if(s.name===S.name)return;var e=s.saved&&s.saved[id];if(e)out.push({name:s.name,text:e.text,me:false})});
+  out.sort(function(a,b){return a.name.localeCompare(b.name,'ko')});
+  if(!ADMIN&&S.saved[id])out.unshift({name:S.name,text:S.saved[id].text,me:true});
+  return out;
+}
+function renderFriends(){
+  ITEMS.filter(function(k){return k!=='quiz'}).forEach(function(id){
+    var box=$('#fr-'+id);if(!box)return;var es=entries(id);
+    box.innerHTML='<h3>👭 친구들이 쓴 글 ('+es.length+')</h3>'+(es.length?'<div class="fl">'+es.map(function(e){return '<div class="fi'+(e.me?' me':'')+'"><b>'+esc(e.name)+(e.me?' (나)':'')+'</b>'+esc(e.text)+'</div>'}).join('')+'</div>':'<p class="empty">아직 저장된 글이 없어요. 저장하면 여기에 보여요.</p>');
+  });
+}
+function renderMonitor(){
+  if(!ADMIN)return;var body=$('#monBody');if(!body)return;
+  var rows=R.students.slice().sort(function(a,b){return a.name.localeCompare(b.name,'ko')});
+  $('#monCnt').textContent=rows.length+'명';
+  body.innerHTML=rows.length?rows.map(function(s){
+    var sv=s.saved||{},n=0;
+    var cells=ITEMS.map(function(k){var e=sv[k];if(e)n++;
+      if(k==='quiz')return '<td>'+(e?(5-(e.wrong||[]).length)+'/5'+((e.wrong||[]).length?' (틀림: '+e.wrong.join(', ')+'번)':' 🎉'):'–')+'</td>';
+      return '<td>'+(e?'✅':'–')+'</td>'}).join('');
+    return '<tr><td>'+esc(s.name)+'</td>'+cells+'<td class="num">'+n+'/9</td></tr>'}).join(''):'<tr><td colspan="11">아직 저장한 학생이 없어요.</td></tr>';
+}
+
+/* ---------- 저장 ---------- */
+var pushing=false,again=false;
+function pushRemote(){
+  if(ADMIN)return Promise.resolve();
+  if(!db){setSync('local');return Promise.resolve()}
+  if(pushing){again=true;return Promise.resolve()}
+  pushing=true;
+  return (async function(){
+    try{do{again=false;await db.doc('students/'+hexId(S.name)).set({name:S.name,saved:clone(S.saved),at:Date.now()})}while(again);setSync('ok')}
+    catch(e){setSync('err');toast('⚠️ 공유 저장에 실패했어요. 내 기기에는 저장되어 있어요.')}
+    pushing=false;
+  })();
+}
+function onSave(id){
+  if(ADMIN)return;
+  if(!editable(id)){S.editing[id]=true;S.drafts[id]=clone(S.saved[id].v);saveLocal();refreshCard(id);return}
+  var d=draft(id),v=d.slice();
+  if(id==='quiz'){if(v.some(function(x){return x<0})){toast('모든 문제에 답을 골라 주세요');return}}
+  else if(id==='a7'){if(v.some(function(x){return !x})){toast('빈칸을 모두 채워 주세요');return}}
+  else if(!v.some(function(x){return String(x).trim()})){toast('내용을 써 주세요');return}
+  var e={v:v,text:joinText(id,v),at:Date.now()};
+  if(id==='quiz'){e.wrong=[];QZ.forEach(function(q,i){if(v[i]!==q.a)e.wrong.push(i+1)});e.score=5-e.wrong.length}
+  S.saved[id]=e;S.editing[id]=false;S.drafts[id]=clone(v);saveLocal();
+  refreshCard(id);renderFriends();
+  toast('💾 저장했어요!');
+  pushRemote();
+}
+
+/* ---------- 이벤트 ---------- */
+document.addEventListener('click',function(ev){
+  var t=ev.target.closest('button');if(!t)return;
+  if(t.id==='go'){return tryLogin()}
+  if(t.id==='out'){try{localStorage.removeItem(LOGIN)}catch(e){}location.reload();return}
+  if(t.id==='reset'){return askReset(t)}
+  if(t.dataset.save){return onSave(t.dataset.save)}
+  if(t.dataset.ex){var b=$('#ex-'+t.dataset.ex);b.hidden=!b.hidden;return}
+  if(t.dataset.s!==undefined&&t.closest('.pie')){return selPie(+t.dataset.s)}
+  if(t.dataset.chip){chipSel=chipSel===t.dataset.chip?'':t.dataset.chip;refreshCard('a7');return}
+  if(t.dataset.blank!==undefined){if(!editable('a7'))return;var d=draft('a7'),i=+t.dataset.blank;
+    if(chipSel){d[i]=chipSel}else if(d[i]){d[i]=''}else{toast('먼저 위의 낱말을 눌러 주세요')}
+    saveLocal();refreshCard('a7');return}
+  if(t.dataset.q!==undefined){if(!editable('quiz'))return;draft('quiz')[+t.dataset.q]=+t.dataset.o;saveLocal();refreshCard('quiz');return}
+});
+document.addEventListener('click',function(ev){var p=ev.target.closest('.pie path');if(p)selPie(+p.dataset.s)});
+document.addEventListener('input',function(ev){var t=ev.target;if(t.tagName==='TEXTAREA'&&t.dataset.a){draft(t.dataset.a)[+t.dataset.i]=t.value;saveLocal()}});
+var rsT;
+function askReset(btn){
+  if(btn.dataset.armed!=='1'){btn.dataset.armed='1';btn.textContent='❗ 한 번 더 누르면 모두 삭제';clearTimeout(rsT);rsT=setTimeout(function(){btn.dataset.armed='';btn.textContent='🔄 초기화'},4000);return}
+  btn.dataset.armed='';btn.textContent='🔄 초기화';doReset();
+}
+async function doReset(){
+  try{
+    if(db){var all=await db.collection('students').get();for(var i=0;i<all.docs.length;i++){await db.doc('students/'+all.docs[i].id).delete()}
+      await db.doc('meta/reset').set({at:Date.now()})}
+    R.students=[];renderFriends();renderMonitor();toast('모든 기록을 초기화했어요');
+  }catch(e){toast('⚠️ 초기화에 실패했어요. 다시 눌러 주세요.')}
+}
+$('#nm').addEventListener('keydown',function(e){if(e.key==='Enter')tryLogin()});
+
+/* ---------- 로그인 ---------- */
+function validName(n){if(n==='administrator')return true;return Array.from(n).length===3&&!/\s/.test(n)}
+function tryLogin(){
+  var n=$('#nm').value.trim();
+  if(!validName(n)){$('#nmErr').textContent='이름은 세 글자로 입력해 주세요.';return}
+  try{localStorage.setItem(LOGIN,n)}catch(e){}
+  enter(n);
+}
+function enter(n){
+  ADMIN=(n==='administrator');S=loadState(n);
+  $('#login').hidden=true;$('#app').hidden=false;
+  buildApp();setSync(db?'ok':'local');connect();
+}
+
+/* ---------- 공유 저장소 연결 ---------- */
+var connected=false;
+function applyReset(at){
+  if(!at||at<=(S.resetSeen||0))return;
+  var had=Object.keys(S.saved).length>0;
+  ITEMS.forEach(function(k){if(S.saved[k]&&S.saved[k].at<at){delete S.saved[k];delete S.drafts[k];delete S.editing[k]}});
+  S.resetSeen=at;saveLocal();ITEMS.forEach(refreshCard);renderFriends();
+  if(had&&!ADMIN)toast('🔄 처음부터 다시 시작해요');
+}
+async function connect(){
+  if(connected)return;connected=true;
+  await new Promise(function(r){if(window.__fbReady)r();else window.addEventListener('fb-ready',r,{once:true});setTimeout(r,8000)});db=window.__dbP||null;
+  if(!db){setSync('local');return}
+  setSync('ok');
+  try{
+    var m=await db.doc('meta/reset').get();if(m.exists)applyReset(m.data().at);
+    if(!ADMIN){
+      var me=await db.doc('students/'+hexId(S.name)).get(),newer=!me.exists&&Object.keys(S.saved).length>0;
+      if(me.exists){var rs=me.data().saved||{};
+        Object.keys(rs).forEach(function(k){if(ITEMS.indexOf(k)<0)return;if(!S.saved[k]||rs[k].at>S.saved[k].at){S.saved[k]=rs[k];S.editing[k]=false;S.drafts[k]=clone(rs[k].v)}});
+        Object.keys(S.saved).forEach(function(k){if(!rs[k]||S.saved[k].at>rs[k].at)newer=true})}
+      saveLocal();ITEMS.forEach(refreshCard);
+      if(newer)pushRemote();
+    }
+    db.doc('meta/reset').onSnapshot(function(s){if(s.exists)applyReset(s.data().at)},function(){});
+    db.collection('students').onSnapshot(function(snap){R.students=snap.docs.map(function(d){return d.data()}).filter(function(s){return s&&s.name});renderFriends();renderMonitor()},function(){setSync('err')});
+  }catch(e){setSync('err')}
+}
+
+/* ---------- 시작 ---------- */
+var saved=null;try{saved=localStorage.getItem(LOGIN)}catch(e){}
+if(saved&&validName(saved))enter(saved);
+})();
+</script>
+<script type="module">
+try{
+  const V="10.14.1",B="https://www.gstatic.com/firebasejs/"+V+"/";
+  const [A,F]=await Promise.all([import(B+"firebase-app.js"),import(B+"firebase-firestore.js")]);
+  const app=A.initializeApp({
+    apiKey:"AIzaSyDUJohyCDUOtM5GwPrk560qvz8mXkdfeao",
+    authDomain:"online-worksheet-a7393.firebaseapp.com",
+    projectId:"online-worksheet-a7393",
+    storageBucket:"online-worksheet-a7393.firebasestorage.app",
+    messagingSenderId:"303995332009",
+    appId:"1:303995332009:web:b0529dc8616c873f5a10b8"
+  });
+  const fs=F.getFirestore(app);
+  const ds=s=>({exists:s.exists(),data:()=>s.data()});
+  const qs=q=>({docs:q.docs.map(d=>({id:d.id,data:()=>d.data()}))});
+  window.__dbP={
+    doc:p=>({
+      get:async()=>ds(await F.getDoc(F.doc(fs,p))),
+      set:d=>F.setDoc(F.doc(fs,p),d),
+      delete:()=>F.deleteDoc(F.doc(fs,p)),
+      onSnapshot:(n,e)=>F.onSnapshot(F.doc(fs,p),x=>n(ds(x)),e)
+    }),
+    collection:p=>({
+      get:async()=>qs(await F.getDocs(F.collection(fs,p))),
+      onSnapshot:(n,e)=>F.onSnapshot(F.collection(fs,p),x=>n(qs(x)),e)
+    })
+  };
+}catch(e){console.error(e);window.__dbP=null}
+window.__fbReady=true;window.dispatchEvent(new Event('fb-ready'));
+</script>
+</body></html>
