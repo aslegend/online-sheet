@@ -523,14 +523,18 @@ body.tmode header{display:none}
       <h2><span class="step">7</span> 짝 vs AI 비교하기 <span class="done-badge">다 했어요 ✓</span></h2>
       <div class="todo"><b>📝 지금 할 일</b><ol>
         <li>키위런에서 <b>'AI 피드백 받기'</b>를 눌러요.</li>
-        <li>기준마다 <b>짝의 포스트잇</b>과 <b>AI 피드백</b>을 보고 표시해요.</li>
+        <li>기준마다 <b>짝의 포스트잇</b>과 키위런 <b>내용 점수</b>를 보고 표시해요.</li>
         <li>나오는 규칙에 따라 고칠지 정하고, 까닭을 써요.</li>
         <li>재도전 목표와 고칠 계획을 정해요.</li></ol></div>
       <div class="ref"><h4>⚖️ 비교 규칙</h4>
-        <div>🔴 짝도 AI도 지적 → <b>반드시 고치기</b></div>
+        <div>🔴 짝 제안 있음 + AI 나무 아님 → <b>반드시 고치기</b></div>
         <div>🟡 한쪽만 지적 → <b>독자 입장에서 판단</b>하고 까닭 쓰기</div>
-        <div>🟢 둘 다 없음 → <b>그대로</b></div>
+        <div>🟢 짝 제안 없음 + AI 나무 → <b>그대로</b></div>
         <div>💬 두 의견 모두 내 생각과 다르면 → <b>까닭</b> 적기</div></div>
+      <div class="ref"><h4>🤖 키위런 '내용 점수' 보는 법</h4>
+        <div>기삿거리·제목·자료: <b>20점</b> 🌳 나무 · <b>14점</b> 🌱 새싹 · <b>8점</b> 🌰 씨앗</div>
+        <div>본문: <b>40점</b> 🌳 나무 · <b>28점</b> 🌱 새싹 · <b>16점</b> 🌰 씨앗</div>
+        <div class="note">나무가 아니면 AI가 고칠 점을 말한 거예요. '내용 피드백'에서 그 기준의 고칠 점을 읽어 봐요. 형식 피드백(길이, 독자 나이 등)은 참고만 해요.</div></div>
       <div class="ref" id="rubricSide7"></div>
     </div>
     <div class="main">
@@ -845,8 +849,7 @@ function buildP7(){
     const g3=document.createElement('div');g3.className='g3';
     const cell=(t,el)=>{const w=document.createElement('div');const l=document.createElement('label');l.className='q';l.textContent=t;w.appendChild(l);w.appendChild(el);g3.appendChild(w)};
     cell('🤝 짝의 제안',chipGroup('peer_'+k,[{v:'말함',label:'✏️ 있어요'},{v:'없음',label:'– 없어요'}],'',()=>refreshDynamic()));
-    cell('🤖 AI가 고칠 점',chipGroup('aifix_'+k,[{v:'말함',label:'✏️ 있어요'},{v:'없음',label:'– 없어요'}],'',()=>refreshDynamic()));
-    cell('🤖 AI가 준 단계',chipGroup('ai_'+k,LEVELS,'',()=>refreshDynamic()));
+    cell(`🤖 AI 내용 점수 (${it.key==='body'?'40 / 28 / 16':'20 / 14 / 8'}점)`,chipGroup('ai_'+k,LEVELS.map(l=>({...l,label:`${l.v} ${it.key==='body'?{나무:40,새싹:28,씨앗:16}[l.v]:{나무:20,새싹:14,씨앗:8}[l.v]}점`})),'',()=>refreshDynamic()));
     c.appendChild(g3);
     const rule=document.createElement('div');rule.id='rule_'+k;rule.className='rule hidden';c.appendChild(rule);
     const dw=document.createElement('div');dw.id='dec_'+k;dw.className='hidden';
@@ -880,11 +883,12 @@ function buildP9(){
 }
 /* 짝·AI 비교 규칙 */
 function ruleOf(d,k){
-  const peer=d['peer_'+k]==='말함', ai=d['aifix_'+k]==='말함';
-  if(!d['aifix_'+k]||!d['peer_'+k])return null;
+  /* AI는 '나무'가 아니면 고칠 점을 말한 것으로 봄 */
+  const peer=d['peer_'+k]==='말함', ai=!!d['ai_'+k]&&d['ai_'+k]!=='나무';
+  if(!d['ai_'+k]||!d['peer_'+k])return null;
   if(peer&&ai)return 'must'; if(peer||ai)return 'judge'; return 'keep';
 }
-const RULE_TXT={must:'🔴 짝도 AI도 말했어요 → 반드시 고치기 (안 고치려면 까닭을 꼭 써요)',judge:'🟡 한쪽만 말했어요 → 독자 입장에서 판단하기 (고칠지 정하고 까닭 쓰기)',keep:'🟢 둘 다 고칠 점이 없어요 → 그대로 두기'};
+const RULE_TXT={must:'🔴 짝도 AI도 고칠 점이 있대요 → 반드시 고치기 (안 고치려면 까닭을 꼭 써요)',judge:'🟡 한쪽만 고칠 점이 있대요 → 독자 입장에서 판단하기 (고칠지 정하고 까닭 쓰기)',keep:'🟢 짝은 제안이 없고 AI도 나무예요 → 그대로 두기'};
 function refreshDynamic(){
   const all=TEACHER&&tWho==='all';
   ITEMS.forEach(it=>{const k=it.key;
@@ -913,7 +917,7 @@ const REQUIRED={
   p4:()=>data.pick&&tr_(data.pickWhy),
   p5:()=>ITEMS.every(it=>data['pre_'+it.key])&&data.focus,
   p6:()=>true,
-  p7:()=>ITEMS.every(it=>{const k=it.key;if(!data['peer_'+k]||!data['ai_'+k]||!data['aifix_'+k])return false;const r=ruleOf(data,k);
+  p7:()=>ITEMS.every(it=>{const k=it.key;if(!data['peer_'+k]||!data['ai_'+k])return false;const r=ruleOf(data,k);
       if(r==='judge')return data['decide_'+k]&&tr_(data['why_'+k]);
       if(r==='must')return data['decide_'+k]&&(data['decide_'+k]==='고칠래요'||tr_(data['why_'+k]));
       return true})&&data.goal1&&tr_(data.plan),
@@ -922,7 +926,7 @@ const REQUIRED={
 };
 const MSG={p1:"내 기사의 표제를 써 주세요.",p2:"네 기준을 모두 고르고, 자신 있는 점과 키우고 싶은 점을 써 주세요.",p3:"내 기사문을 붙여 넣고, 패들렛·키위런 두 가지를 모두 눌러 주세요.",
   p4:"기사를 고르고 까닭을 써 주세요.",p5:"네 기준을 모두 고르고, 살펴볼 기준을 골라 주세요.",p6:"",
-  p7:"짝 제안·AI 단계·AI 지적을 모두 표시하고, 판단과 까닭, 재도전 목표와 계획을 써 주세요.",p8:"패들렛에 올렸는지 표시해 주세요.",p9:"세 문항, 자기평가, 돌아보기를 모두 해 주세요."};
+  p7:"짝 제안과 AI 내용 점수를 모두 표시하고, 판단과 까닭, 재도전 목표와 계획을 써 주세요.",p8:"패들렛에 올렸는지 표시해 주세요.",p9:"세 문항, 자기평가, 돌아보기를 모두 해 주세요."};
 function markSaved(){DONE.forEach(s=>$(s).classList.toggle('saved',!!(data.done||{})[s]))}
 document.querySelectorAll('[data-save]').forEach(b=>b.onclick=async()=>{
   const s=b.dataset.save;if(!REQUIRED[s]()){toast(MSG[s]);return}
@@ -994,7 +998,7 @@ async function start(){
   const timeout=(p,ms)=>Promise.race([p,new Promise(r=>setTimeout(()=>r(null),ms))]);
   /* 다른 태블릿으로 들어와도 어제 기록을 이어 쓰도록 서버 기록과 합치기 */
   if(LIVE){try{const srv=await timeout(DB.getRow(me.num),4000);if(srv&&(!data._at||(srv._at&&srv._at>data._at)))data=Object.assign({},srv)}catch(e){}}
-  prev10=await timeout(loadPrev10(me.num),4000);
+  prev10=null;  // news11에서 새로 시작(10차시 기록은 불러오지 않음)
   $('syncMsg').textContent='';
   if(LIVE){ showPage(0); DB.onState(onStudentState); }
   else { applyPrev(); buildAll(); showPage(lsGet(LS_KEY()+'_page')||1); }
@@ -1036,7 +1040,7 @@ function tvCompare(rows){
   const seg=k=>{const c={must:0,judge:0,keep:0};rows.forEach(r=>{const x=ruleOf(r.data,k);if(x)c[x]++});const t=c.must+c.judge+c.keep;
     if(!t)return '<div class="seg"></div>';
     return '<div class="seg">'+[['must','s-must','반드시'],['judge','s-judge','판단'],['keep','s-keep','그대로']].map(([k2,cl,lb])=>c[k2]?`<div class="${cl}" style="width:${c[k2]/t*100}%">${lb} ${c[k2]}</div>`:'').join('')+'</div>'};
-  return `<div class="legend"><span style="--c:#d64545">둘 다 지적 → 반드시 고치기</span><span style="--c:#e0a020">한쪽만 지적 → 독자 입장에서 판단</span><span style="--c:var(--tree)">둘 다 없음 → 그대로</span></div>
+  return `<div class="legend"><span style="--c:#d64545">둘 다 지적 → 반드시 고치기</span><span style="--c:#e0a020">한쪽만 지적 → 독자 입장에서 판단</span><span style="--c:var(--tree)">AI 나무·짝 제안 없음 → 그대로</span></div>
     <div class="bars">${ITEMS.map(it=>`<b>${it.name}</b>${seg(it.key)}`).join('')}</div>`;
 }
 function tvGoals(rows){
@@ -1071,7 +1075,7 @@ function pageFill(d,p){
     case 4:return [c('pick')+t('pickWhy'),2];
     case 5:return [n('pre_')+c('focus'),ITEMS.length+1];
     case 6:return [(d.done||{}).p6?1:0,1];
-    case 7:return [n('peer_')+n('ai_')+n('aifix_')+c('goal1')+t('plan'),ITEMS.length*3+2];
+    case 7:return [n('peer_')+n('ai_')+c('goal1')+t('plan'),ITEMS.length*2+2];
     case 8:return [c('posted'),1];
     case 9:return [QUIZ.filter(q=>d[q.k]).length+n('post_')+t('changed')+c('helpful')+t('helpfulWhy')+t('next'),QUIZ.length+ITEMS.length+4];
   }
@@ -1083,7 +1087,7 @@ const FIELDS=[
   ['myArticle','처음 기사문'],['up_padlet','패들렛'],['up_kiwi','키위런 저장'],
   ['pick','먼저 읽을 기사'],['pickWhy','까닭'],['focus','살펴볼 기준'],
   ...ITEMS.map(i=>['peer_'+i.key,'짝 제안_'+i.name]),
-  ...ITEMS.map(i=>['ai_'+i.key,'AI단계_'+i.name]),...ITEMS.map(i=>['aifix_'+i.key,'AI지적_'+i.name]),
+  ...ITEMS.map(i=>['ai_'+i.key,'AI단계_'+i.name]),
   ...ITEMS.flatMap(i=>[['decide_'+i.key,'판단_'+i.name],['why_'+i.key,'까닭_'+i.name]]),
   ['goal1','목표1'],['goal2','목표2'],['plan','고칠 계획'],
   ...ITEMS.map(i=>['ai2_'+i.key,'고친 뒤 AI_'+i.name]),['posted','고친 글 패들렛'],
