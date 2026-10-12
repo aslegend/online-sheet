@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>기사문 고쳐 쓰기</title>
+<title>기사문 쓰기·고쳐 쓰기</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;800&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -15,11 +15,11 @@
    둘 다 비우면 이 기기에만 저장(시연용) */
 const CONFIG = {
   FIREBASE: {
-    apiKey: "",
-    authDomain: "",
-    databaseURL: "",
-    projectId: "",
-    appId: ""
+    apiKey: "AIzaSyDUJohyCDUOtM5GwPrk560qvz8mXkdfeao",
+    authDomain: "online-worksheet-a7393.firebaseapp.com",
+    databaseURL: "https://online-worksheet-a7393-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "online-worksheet-a7393",
+    appId: "1:303995332009:web:b0529dc8616c873f5a10b8"
   },
   SCRIPT_URL: "https://script.google.com/macros/s/AKfycby3Fzy-w6SHcjyMINxWNKunOkNvUa1pAypE_csWeHQ8QfK9Byr_p38tSqs9rx7PWD2p/exec",
   NUMBERS: [1,2,3,4,5,7,8,9,10,11,12,13],  // 우리 반 번호(6번 없음)
@@ -252,196 +252,416 @@ details.rb summary{cursor:pointer;font-weight:600;color:var(--blue)}
 .s-must{background:#d64545}.s-judge{background:#e0a020}.s-keep{background:var(--tree)}
 .legend{display:flex;gap:14px;font-size:18px;margin:0 0 14px;flex-wrap:wrap}
 .legend span::before{content:'';display:inline-block;width:14px;height:14px;border-radius:4px;margin-right:6px;vertical-align:-1px;background:var(--c)}
+.todo{background:#fffbea;border:1.5px solid #f3dc8b;border-radius:12px;padding:10px 14px;margin:8px 0 14px}
+.todo > b{display:block;color:#8a5a00;margin-bottom:2px}
+.todo ol{margin:0;padding-left:22px}.todo li{margin:3px 0}
+/* ===== 태블릿(S6 Lite 가로) 앱 레이아웃 ===== */
+:root{--hh:48px;--fh:54px}
+html,body{height:100%}
+header{padding:6px 14px;min-height:var(--hh);flex-wrap:nowrap}
+header h1{font-size:17px;white-space:nowrap}
+header .day{font-size:13px;font-weight:700;color:#fff;background:var(--blue);border-radius:999px;padding:2px 10px;white-space:nowrap}
+header .day.d2{background:var(--tree)}
+.card{margin:0}
+.pg{display:grid;grid-template-columns:minmax(300px,38%) 1fr;gap:12px;padding:10px 12px;height:calc(100dvh - var(--hh) - var(--fh));max-width:1500px;margin:0 auto}
+.pg>.side,.pg>.main{overflow:auto;background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 16px}
+.pg>.side{background:#fcfcfd}
+.pg h2{font-size:19px;margin:0 0 8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.pg.saved .done-badge{display:inline-block}
+.pg h3{font-size:16px;margin:14px 0 6px}
+.pg.wait{display:flex;align-items:center;justify-content:center;text-align:center}
+.pg.wait .box{background:#fff;border:1px solid var(--line);border-radius:20px;padding:40px 48px}
+.pg.wait .big{font-size:64px}
+.todo{background:#fffbea;border:1.5px solid #f3dc8b;border-radius:12px;padding:10px 14px;margin:0 0 12px}
+.todo>b{display:block;color:#8a5a00;margin-bottom:2px}
+.todo ol{margin:0;padding-left:22px}.todo li{margin:3px 0}
+.ref{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:0 0 10px;background:#fff;font-size:15px}
+.ref h4{margin:0 0 4px;font-size:15px}
+.rub-c{border-top:1px dashed var(--line);padding:6px 0}.rub-c:first-of-type{border-top:0}
+.rub-c .nm{font-weight:800}.rub-c .qq{font-size:13px;color:var(--muted)}
+.rub-c div{font-size:14px;line-height:1.45}
+.article{padding:10px 12px;margin:0 0 10px}.article .t1{font-size:18px}.article p{font-size:15px;margin:4px 0}
+label.q{margin:12px 0 6px}
+.main label.q:first-child{margin-top:0}
+textarea{min-height:64px}
+#myArticle{min-height:260px;font-size:16px;line-height:1.7}
+.chip{min-height:44px}
+table.rate th,table.rate td{padding:8px 6px}
+.save-row{position:sticky;bottom:-14px;background:linear-gradient(transparent,#fff 30%);padding:12px 0 2px;margin-top:8px}
+/* 하단 막대 */
+footer#foot{position:fixed;left:0;right:0;bottom:0;height:var(--fh);background:#fff;border-top:1px solid var(--line);display:flex;align-items:center;gap:10px;padding:0 12px;z-index:15}
+footer#foot .steps2{display:flex;gap:4px;align-items:center;flex:1;min-width:0;overflow:hidden}
+footer#foot .steps2 span{flex:1;max-width:90px;height:8px;border-radius:4px;background:var(--line)}
+footer#foot .steps2 span.on{background:var(--blue)}
+footer#foot .steps2 span.cur{background:var(--blue);outline:2px solid #9bb9f0}
+footer#foot .steps2 i{font-style:normal;font-size:11px;color:var(--muted);white-space:nowrap;margin:0 4px}
+footer#foot .pgname{font-size:14px;font-weight:700;white-space:nowrap}
+footer#foot .btn{min-height:40px;padding:6px 14px}
+footer#foot .sync{font-size:12px;color:var(--muted);white-space:nowrap}
+footer#foot .lock{font-size:12px;color:var(--muted);white-space:nowrap}
+@media (max-width:900px){
+  .pg{display:block;height:auto;padding:10px 10px calc(var(--fh) + 16px)}
+  .pg>.side,.pg>.main{overflow:visible;margin-bottom:10px}
+}
+/* 체크 칩 */
+.chip.tick[aria-pressed=true]{border-color:var(--tree);background:var(--tree-soft);color:var(--tree)}
+.chip.tick[aria-pressed=true]::before{content:'✔ '}
+.mysum{font-size:15px}.mysum div{margin:3px 0}.mysum b{color:var(--blue)}
+
+/* ===== 교사 화면 ===== */
+body.tmode header{display:none}
+#teacher{display:grid;grid-template-rows:auto 1fr;height:100dvh}
+.tbar2{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#1f2937;color:#fff;flex-wrap:wrap}
+.tbar2 .now{font-size:13px;opacity:.75}
+.tbar2 .nowpg{font-size:18px;font-weight:800;margin-right:4px}
+.tbar2 .btn{min-height:42px;padding:6px 14px;font-size:15px}
+.tbar2 .btn.dark{background:#374151}
+.tbar2 .btn.go{background:#2f6fdb}
+.tbar2 .sp{flex:1}
+.tvsw{display:flex;align-items:center;gap:6px;background:#374151;border-radius:12px;padding:4px 6px}
+.tvsw select{width:auto;font-size:14px;padding:6px 8px;border-radius:8px;border:0}
+.tvsw .btn{min-height:36px;padding:4px 12px;font-size:14px}
+.tvsw .btn.on{background:var(--tree)}.tvsw .btn.off{background:#6b7280}
+.tbody{display:grid;grid-template-columns:1fr 290px;min-height:0}
+#tMirror{overflow:auto;min-height:0;background:var(--bg)}
+#tMirror .pg{height:auto;min-height:calc(100dvh - 140px)}
+#tMirror .pg>.side,#tMirror .pg>.main{max-height:none}
+.tside{border-left:1px solid var(--line);background:#fff;overflow:auto;min-height:0;display:flex;flex-direction:column}
+.tside .hd{padding:10px 12px;border-bottom:1px solid var(--line);font-weight:800;display:flex;align-items:center;gap:6px}
+.tside .hd .cnt{margin-left:auto;font-size:13px;color:var(--muted);font-weight:600}
+.slist{flex:1;overflow:auto}
+.srow{display:grid;grid-template-columns:30px 1fr auto;gap:2px 8px;align-items:center;padding:7px 12px;border-bottom:1px solid #f0f1f4;cursor:pointer;font-size:14px}
+.srow:hover{background:#f7f9fc}
+.srow.sel{background:var(--blue-soft)}
+.srow .n{font-weight:800;color:var(--muted)}
+.srow .nm{font-weight:700}
+.srow .sst{font-size:12px;color:var(--muted);text-align:right}
+.srow .bar3{grid-column:2/4;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.srow .bar3 i{display:block;height:100%;background:var(--blue)}
+.srow.done .bar3 i{background:var(--tree)}
+.srow.off{opacity:.45}
+.srow.behind .sst{color:var(--warn);font-weight:700}
+.srow.idle{background:var(--seed-soft)}
+.tside .foot2{padding:10px 12px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:6px}
+.tside .foot2 .btn{min-height:40px;font-size:14px;padding:6px 10px}
+.viewing{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#fff7d6;border-bottom:1px solid #f0dc8f;font-weight:700;font-size:14px}
+.viewing .btn{min-height:34px;padding:4px 12px;font-size:13px}
+.nextprev{margin:0 12px 14px;border:1.5px dashed #b9c3d3;border-radius:14px;padding:10px 14px;background:#fff}
+.nextprev h4{margin:0 0 6px;font-size:15px;color:var(--muted)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:60;display:flex;align-items:center;justify-content:center}
+.modal .mbox{background:#fff;border-radius:18px;width:min(1100px,94vw);max-height:88vh;overflow:auto;padding:18px}
+.pagegrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin-top:8px}
+.pagegrid button{font:inherit;text-align:left;border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:10px 12px;cursor:pointer}
+.pagegrid button.cur{border-color:var(--blue);background:var(--blue-soft)}
+.pagegrid .dl{grid-column:1/-1;font-weight:800;color:var(--muted);margin-top:6px}
+/* 교사 미러 */
+.mirror .chip{pointer-events:none}
+.mirror input[type=text],.mirror textarea,.mirror select{background:#f7f8fa;pointer-events:none}
+.mirror textarea{min-height:40px}
+.mirror #myArticle{min-height:60px}
+.mirror [data-save],.mirror .chkbtn{display:none!important}
+@media (max-width:1000px){.tbody{grid-template-columns:1fr 230px}}
+
+.ccard{padding:10px 12px;margin:0 0 10px}
+.ccard .g3{display:grid;grid-template-columns:1fr 1fr 1.4fr;gap:10px}
+.ccard .g3 label.q{margin:6px 0 4px;font-size:14px}
+.ccard .g3 .chip{padding:6px 10px;font-size:14px}
+@media (max-width:1100px){.ccard .g3{grid-template-columns:1fr 1fr}}
+.mirror .ccard .g3{grid-template-columns:1fr}
 </style>
 </head>
 <body>
 <header id="hdr">
-  <h1>📰 기사문 고쳐 쓰기</h1>
-  <div class="progress hidden" id="prog"></div>
+  <h1>📰 기사문 쓰기·고쳐 쓰기</h1>
+  <span class="day hidden" id="dayTag"></span>
   <span class="who" id="who"></span>
 </header>
 
 <!-- 로그인 -->
 <div class="wrap" id="loginWrap">
-  <div class="card" id="login">
+  <div class="card" id="login" style="margin:30px auto">
     <h2>👋 시작하기</h2>
     <p class="lead">번호와 이름을 입력하세요. 쓴 내용은 자동으로 저장돼요.</p>
     <label class="q" for="num">번호</label>
     <select id="num"></select>
     <label class="q" for="nm">이름</label>
     <input type="text" id="nm" maxlength="10" placeholder="이름">
-    <div class="save-row"><button class="btn" id="startBtn">들어가기</button></div>
+    <div class="save-row" style="position:static;background:none"><button class="btn" id="startBtn">들어가기</button></div>
   </div>
 </div>
 
 <!-- 학생 화면 -->
-<div class="wrap hidden" id="app">
+<div class="hidden" id="app">
 
-  <section class="card wait" data-page="0">
-    <div class="big">⏳</div>
-    <h2 style="justify-content:center">선생님이 시작할 때까지 기다려요</h2>
-    <p class="lead">화면이 저절로 넘어가요.</p>
+  <section class="pg wait" data-page="0">
+    <div class="box"><div class="big">✋</div>
+      <h2 style="justify-content:center;font-size:24px">태블릿을 잠시 내려놓아요</h2>
+      <p class="lead">선생님 말씀이나 종이 활동에 집중해요.<br>다음 화면은 선생님이 열어 줄 거예요.</p></div>
   </section>
 
-  <!-- 1. 동기 유발 -->
-  <section class="card" id="p1" data-page="1">
-    <h2><span class="step">1</span> 어떤 기사를 먼저 읽고 싶나요? <span class="done-badge">다 했어요 ✓</span></h2>
-    <p class="lead">두 기사는 <b>내용이 같고 제목만 달라요.</b></p>
-    <div class="grid2" id="titleCards"></div>
-    <label class="q">어느 기사를 먼저 읽고 싶나요?</label>
-    <div id="pickBox"></div>
-    <label class="q" for="pickWhy">내용이 같은데도 그 기사를 더 읽고 싶은 까닭은?</label>
-    <textarea id="pickWhy" placeholder="예) 제목만 봐도 무슨 일이 있었는지 궁금해져서요."></textarea>
-    <div class="save-row"><button class="btn" data-save="p1">다 했어요</button></div>
+  <!-- ===== 화요일: 쓰기·자기평가 ===== -->
+  <section class="pg" id="p1" data-page="1">
+    <div class="side">
+      <h2><span class="step">1</span> 내 기사문 쓰기 <span class="done-badge">다 했어요 ✓</span></h2>
+      <div class="todo"><b>📝 지금 할 일</b><ol>
+        <li><b>교과서</b>에 내 기사문을 끝까지 써요.</li>
+        <li>다 쓰면 오른쪽에 <b>표제</b>를 적고, 들어간 것을 눌러 확인해요.</li>
+        <li>빠진 부분이 있으면 <b>채우기만</b> 해요. 고쳐 쓰기는 내일 해요!</li></ol></div>
+      <div class="ref"><h4>📐 기사문의 짜임</h4>
+        <div><b>표제</b> 기사 내용을 짧게 드러내는 제목</div>
+        <div><b>부제</b> 표제를 보충하는 작은 제목</div>
+        <div><b>전문</b> 기사 내용을 간추린 첫 문단 — 누가·언제·어디서·무엇을·어떻게·왜</div>
+        <div><b>본문</b> 전문의 내용을 자세히 풀어 쓴 부분</div>
+        <div><b>자료</b> 사진·설문 결과·인터뷰한 말 (출처 밝히기)</div></div>
+    </div>
+    <div class="main">
+      <label class="q" for="myTitle">내 기사의 표제</label>
+      <input type="text" id="myTitle">
+      <label class="q" for="mySub">부제 (있으면)</label>
+      <input type="text" id="mySub">
+      <label class="q">내 글에 들어간 것을 눌러요</label>
+      <div id="chkBox"></div>
+      <div class="save-row"><button class="btn" data-save="p1">다 했어요</button></div>
+    </div>
   </section>
 
-  <!-- 2. 평가 기준 확인 + 앞 차시 자기평가 -->
-  <section class="card" id="p2" data-page="2">
-    <h2><span class="step">2</span> 오늘 내가 살펴볼 점 <span class="done-badge">다 했어요 ✓</span></h2>
-    <p class="lead">지난 시간에 내 기사문을 평가한 결과예요. 다시 보고, 바꾸고 싶으면 다시 골라요.</p>
-    <div class="prevbox" id="prevInfo"></div>
-    <table class="rate" id="preTbl"></table>
-    <label class="q">오늘 짝에게 특히 봐 달라고 할 기준은?</label>
-    <div id="focusBox"></div>
-    <details class="rb" style="margin-top:14px"><summary>📋 평가 기준표 보기</summary><div id="rubricBox"></div></details>
-    <div class="save-row"><button class="btn" data-save="p2">다 했어요</button></div>
+  <section class="pg" id="p2" data-page="2">
+    <div class="side">
+      <h2><span class="step">2</span> 내 기사문 자기평가 <span class="done-badge">다 했어요 ✓</span></h2>
+      <div class="todo"><b>📝 지금 할 일</b><ol>
+        <li>내가 쓴 기사문을 <b>독자</b>가 되어 다시 읽어요.</li>
+        <li>평가 기준표를 보고 기준마다 나무·새싹·씨앗을 골라요.</li>
+        <li>가장 자신 있는 점과 더 키우고 싶은 점을 써요.</li></ol></div>
+      <div class="ref" id="rubricSide2"></div>
+    </div>
+    <div class="main">
+      <table class="rate" id="preTbl"></table>
+      <label class="q" for="strong">가장 자신 있는 점은?</label>
+      <textarea id="strong"></textarea>
+      <label class="q" for="grow">더 키우고 싶은 점은?</label>
+      <textarea id="grow"></textarea>
+      <div class="save-row"><button class="btn" data-save="p2">다 했어요</button></div>
+    </div>
   </section>
 
-  <!-- 3. 짝 첨삭 정리 -->
-  <section class="card" id="p3" data-page="3">
-    <h2><span class="step">3</span> 짝 첨삭 정리하기 <span class="done-badge">다 했어요 ✓</span></h2>
-    <p class="lead">짝과 포스트잇으로 첨삭을 주고받은 뒤, 짝이 해 준 말을 기준별로 정리해요.</p>
-    <label class="q" for="partner">내 짝은?</label>
-    <select id="partner" style="width:auto"></select>
-    <label class="q">짝이 기준별로 고칠 점을 말했나요?</label>
-    <table class="rate" id="peerTbl"></table>
-    <label class="q" for="peerNote">짝이 해 준 말 중 기억에 남는 것 (선택)</label>
-    <textarea id="peerNote" placeholder="예) 전문에 '언제'가 없어서 궁금하다고 했어요."></textarea>
-    <div class="save-row"><button class="btn" data-save="p3">다 했어요</button></div>
+  <section class="pg" id="p3" data-page="3">
+    <div class="side">
+      <h2><span class="step">3</span> 글 옮기고 저장하기 <span class="done-badge">다 했어요 ✓</span></h2>
+      <div class="todo"><b>📝 지금 할 일</b><ol>
+        <li>태블릿 <b>카메라</b>로 교과서의 내 글을 비추고, <b>글자 인식(텍스트 추출)</b>을 눌러 <b>복사</b>해요.</li>
+        <li>오른쪽 칸에 <b>붙여 넣고</b>, 잘못 인식된 글자만 바로잡아요. (내용은 고치지 않아요!)</li>
+        <li>같은 글을 <b>패들렛</b> 내 이름 칸에 올려요.</li>
+        <li><b>키위런</b>에 붙여 넣고 <b>저장만</b> 해요. ⚠️ 'AI 피드백 받기'는 내일 눌러요!</li></ol></div>
+      <div class="ref"><h4>📷 글자 인식이 안 되면</h4><div>갤러리에서 사진을 열고 'T'(텍스트 추출) 버튼을 누르거나, 직접 입력해도 돼요.</div></div>
+    </div>
+    <div class="main">
+      <label class="q" for="myArticle">내 기사문 (붙여 넣기)</label>
+      <textarea id="myArticle"></textarea>
+      <label class="q">올리고 저장했나요?</label>
+      <div id="savedBox"></div>
+      <div class="save-row"><button class="btn" data-save="p3">다 했어요</button></div>
+    </div>
   </section>
 
-  <!-- 4. 짝 vs AI 비교 -->
-  <section class="card" id="p4" data-page="4">
-    <h2><span class="step">4</span> 짝 vs AI 비교하기 <span class="done-badge">다 했어요 ✓</span></h2>
-    <p class="lead">키위런에서 <b>'AI 피드백 받기'</b>를 누르고, AI가 한 말을 기준별로 표시해요. 짝의 의견과 비교해서 무엇을 고칠지 정해요.</p>
-    <div id="cmpCards"></div>
-    <h3>🎯 재도전 목표</h3>
-    <p class="note" id="mustHint"></p>
-    <label class="q">이번에 꼭 고칠 기준 ①</label>
-    <div id="goal1Box"></div>
-    <label class="q">더 고칠 기준 ② (선택)</label>
-    <div id="goal2Box"></div>
-    <label class="q" for="plan">어떻게 고칠까요?</label>
-    <textarea id="plan" placeholder="예) 전문에 '언제'와 '어디서'를 넣고, 제목을 궁금해지게 바꾼다."></textarea>
-    <div class="save-row"><button class="btn" data-save="p4">다 했어요</button></div>
+  <!-- ===== 수요일: 고쳐 쓰기 ===== -->
+  <section class="pg" id="p4" data-page="4">
+    <div class="side">
+      <h2><span class="step">4</span> 어떤 기사를 먼저 읽고 싶나요? <span class="done-badge">다 했어요 ✓</span></h2>
+      <div class="todo"><b>📝 지금 할 일</b><ol>
+        <li>두 기사를 읽어요. 두 기사는 <b>내용이 같고 제목만 달라요.</b></li>
+        <li>먼저 읽고 싶은 기사를 골라요.</li>
+        <li>그렇게 고른 까닭을 써요.</li></ol></div>
+      <div id="titleCards"></div>
+    </div>
+    <div class="main">
+      <label class="q">어느 기사를 먼저 읽고 싶나요?</label>
+      <div id="pickBox"></div>
+      <label class="q" for="pickWhy">내용이 같은데도 그 기사를 더 읽고 싶은 까닭은?</label>
+      <textarea id="pickWhy"></textarea>
+      <div class="save-row"><button class="btn" data-save="p4">다 했어요</button></div>
+    </div>
   </section>
 
-  <!-- 5. 고쳐 쓰기 -->
-  <section class="card" id="p5" data-page="5">
-    <h2><span class="step">5</span> 고쳐 쓰기 <span class="done-badge">다 했어요 ✓</span></h2>
-    <ol class="steps">
-      <li><b>키위런</b>에서 내 기사문을 고쳐 써요.</li>
-      <li>다시 <b>AI 피드백</b>을 받아 단계가 바뀌었는지 확인해요.</li>
-      <li><b>패들렛</b> 내 이름 칸에 제목 앞에 <b>[고친 글]</b>을 붙여 올려요.</li>
-    </ol>
-    <div class="goalbox" id="goalBox"></div>
-    <label class="q">고친 뒤 AI가 준 단계 (선택)</label>
-    <table class="rate" id="ai2Tbl"></table>
-    <label class="q">패들렛에 고친 글을 올렸나요?</label>
-    <div id="postedBox"></div>
-    <div class="save-row"><button class="btn" data-save="p5">다 했어요</button></div>
+  <section class="pg" id="p5" data-page="5">
+    <div class="side">
+      <h2><span class="step">5</span> 오늘 내가 살펴볼 점 <span class="done-badge">다 했어요 ✓</span></h2>
+      <div class="todo"><b>📝 지금 할 일</b><ol>
+        <li>어제 내가 한 자기평가를 다시 봐요.</li>
+        <li>바꾸고 싶은 평가가 있으면 다시 골라요.</li>
+        <li>짝에게 특히 봐 달라고 할 기준을 1개 골라요.</li></ol></div>
+      <div class="ref mysum" id="mySum5"></div>
+    </div>
+    <div class="main">
+      <label class="q">어제 내 자기평가</label>
+      <table class="rate" id="preTbl5"></table>
+      <label class="q">오늘 짝에게 특히 봐 달라고 할 기준은?</label>
+      <div id="focusBox"></div>
+      <div class="save-row"><button class="btn" data-save="p5">다 했어요</button></div>
+    </div>
   </section>
 
-  <!-- 6. 확인·자기평가·성찰 -->
-  <section class="card" id="p6" data-page="6">
-    <h2><span class="step">6</span> 확인하고 돌아보기 <span class="done-badge">다 했어요 ✓</span></h2>
-    <h3>① 기사문 요소 확인</h3>
-    <div id="quizBox"></div>
-    <h3>② 고친 기사문 자기평가</h3>
-    <p class="note">처음 평가와 비교해 보세요.</p>
-    <table class="rate" id="postTbl"></table>
-    <h3>③ 돌아보기</h3>
-    <label class="q" for="changed">무엇을 어떻게 고쳤나요?</label>
-    <textarea id="changed" placeholder="처음 글의 ○○을 △△로 고쳤다. 왜냐하면 ~"></textarea>
-    <label class="q">짝과 AI의 피드백 중 더 도움이 된 것은?</label>
-    <div id="helpfulBox"></div>
-    <label class="q" for="helpfulWhy">그 까닭은?</label>
-    <textarea id="helpfulWhy" placeholder="예) 짝은 독자로서 궁금한 점을 말해 줘서 고칠 곳을 바로 알 수 있었어요."></textarea>
-    <label class="q" for="next">다음에 글을 쓸 때 꼭 지킬 것은?</label>
-    <textarea id="next" placeholder="예) 전문에 육하원칙을 먼저 쓰고 시작할 거예요."></textarea>
-    <div class="save-row"><button class="btn" data-save="p6">다 했어요</button></div>
-    <p class="lead" style="margin:18px 0 0">📮 다음 시간(12~13차시): 마음을 전하고 싶은 사람에게 편지 쓰기</p>
+  <section class="pg" id="p6" data-page="6">
+    <div class="side">
+      <h2><span class="step">6</span> 짝 첨삭하기 (종이) <span class="done-badge">다 했어요 ✓</span></h2>
+      <div class="todo"><b>📝 지금 할 일</b><ol>
+        <li>짝과 <b>A4 기사문</b>을 서로 바꿔요.</li>
+        <li>칠판의 평가 기준표를 보며, 짝의 글을 <b>독자</b>가 되어 읽어요.</li>
+        <li>포스트잇에 <b>칭찬 1개</b>, <b>제안 1개</b>를 써서 붙여요. 제안에는 <b>기준 이름</b>을 넣어요.</li>
+        <li>글을 돌려주며 왜 그렇게 썼는지 설명해요.</li>
+        <li>받은 사람은 <b>"고마워"</b>라고 말하고, 궁금한 점을 질문해요.</li></ol></div>
+    </div>
+    <div class="main" style="display:flex;flex-direction:column;justify-content:center;text-align:center">
+      <div style="font-size:64px">📵</div>
+      <h2 style="justify-content:center">태블릿을 덮어 두고 종이에 집중해요</h2>
+      <div class="goalbox" style="text-align:left">🤝 <b>첨삭 약속</b><br>① 칭찬 먼저 &nbsp; ② 제안에는 기준 이름 넣기 &nbsp; ③ 고맙다고 말하고 질문하기</div>
+      <div class="save-row" style="justify-content:center"><button class="btn" data-save="p6">짝 첨삭 다 했어요</button></div>
+    </div>
   </section>
 
-  <div class="nav hidden" id="nav"><button class="btn ghost" id="prevBtn">◀ 이전</button><button class="btn" id="nextBtn">다음 ▶</button></div>
-  <p class="lockmsg hidden" id="lockMsg">🔒 선생님이 다음 페이지로 넘겨 줄 거예요.</p>
-  <p class="sync" id="syncMsg" style="text-align:center"></p>
+  <section class="pg" id="p7" data-page="7">
+    <div class="side">
+      <h2><span class="step">7</span> 짝 vs AI 비교하기 <span class="done-badge">다 했어요 ✓</span></h2>
+      <div class="todo"><b>📝 지금 할 일</b><ol>
+        <li>키위런에서 <b>'AI 피드백 받기'</b>를 눌러요.</li>
+        <li>기준마다 <b>짝의 포스트잇</b>과 <b>AI 피드백</b>을 보고 표시해요.</li>
+        <li>나오는 규칙에 따라 고칠지 정하고, 까닭을 써요.</li>
+        <li>재도전 목표와 고칠 계획을 정해요.</li></ol></div>
+      <div class="ref"><h4>⚖️ 비교 규칙</h4>
+        <div>🔴 짝도 AI도 지적 → <b>반드시 고치기</b></div>
+        <div>🟡 한쪽만 지적 → <b>독자 입장에서 판단</b>하고 까닭 쓰기</div>
+        <div>🟢 둘 다 없음 → <b>그대로</b></div>
+        <div>💬 두 의견 모두 내 생각과 다르면 → <b>까닭</b> 적기</div></div>
+      <div class="ref" id="rubricSide7"></div>
+    </div>
+    <div class="main">
+      <div id="cmpCards"></div>
+      <h3>🎯 재도전 목표</h3>
+      <p class="note" id="mustHint"></p>
+      <label class="q">이번에 꼭 고칠 기준 ①</label>
+      <div id="goal1Box"></div>
+      <label class="q">더 고칠 기준 ② (선택)</label>
+      <div id="goal2Box"></div>
+      <label class="q" for="plan">어떻게 고칠까요?</label>
+      <textarea id="plan"></textarea>
+      <div class="save-row"><button class="btn" data-save="p7">다 했어요</button></div>
+    </div>
+  </section>
+
+  <section class="pg" id="p8" data-page="8">
+    <div class="side">
+      <h2><span class="step">8</span> 고쳐 쓰기 <span class="done-badge">다 했어요 ✓</span></h2>
+      <div class="todo"><b>📝 지금 할 일</b><ol>
+        <li>재도전 목표를 보며 <b>키위런</b>에서 내 기사문을 고쳐 써요.</li>
+        <li>다시 <b>AI 피드백</b>을 받아 단계가 바뀌었는지 확인해요.</li>
+        <li><b>패들렛</b> 내 이름 칸에 제목 앞에 <b>[고친 글]</b>을 붙여 올려요.</li></ol></div>
+      <div class="goalbox" id="goalBox"></div>
+    </div>
+    <div class="main">
+      <label class="q">고친 뒤 AI가 준 단계 (선택)</label>
+      <table class="rate" id="ai2Tbl"></table>
+      <label class="q">패들렛에 고친 글을 올렸나요?</label>
+      <div id="postedBox"></div>
+      <div class="save-row"><button class="btn" data-save="p8">다 했어요</button></div>
+    </div>
+  </section>
+
+  <section class="pg" id="p9" data-page="9">
+    <div class="side">
+      <h2><span class="step">9</span> 확인하고 돌아보기 <span class="done-badge">다 했어요 ✓</span></h2>
+      <div class="todo"><b>📝 지금 할 일</b><ol>
+        <li>기사문 요소 확인 3문항을 풀어요.</li>
+        <li>고친 기사문을 다시 평가하고, 처음과 비교해요.</li>
+        <li>무엇을 어떻게 고쳤는지, 어떤 피드백이 도움이 됐는지, 다음 다짐을 써요.</li></ol></div>
+      <p class="lead" style="margin:0">📮 다음 시간(12~13차시): 마음을 전하고 싶은 사람에게 편지 쓰기</p>
+    </div>
+    <div class="main">
+      <h3 style="margin-top:0">① 기사문 요소 확인</h3>
+      <div id="quizBox"></div>
+      <h3>② 고친 기사문 자기평가</h3>
+      <table class="rate" id="postTbl"></table>
+      <h3>③ 돌아보기</h3>
+      <label class="q" for="changed">무엇을 어떻게 고쳤나요?</label>
+      <textarea id="changed" placeholder="처음 글의 ○○을 △△로 고쳤다. 왜냐하면 ~"></textarea>
+      <label class="q">짝과 AI의 피드백 중 더 도움이 된 것은?</label>
+      <div id="helpfulBox"></div>
+      <label class="q" for="helpfulWhy">그 까닭은?</label>
+      <textarea id="helpfulWhy"></textarea>
+      <label class="q" for="next">다음에 글을 쓸 때 꼭 지킬 것은?</label>
+      <textarea id="next"></textarea>
+      <div class="save-row"><button class="btn" data-save="p9">다 했어요</button></div>
+    </div>
+  </section>
 </div>
+
+<footer id="foot" class="hidden">
+  <span class="pgname" id="pgName"></span>
+  <div class="steps2" id="steps2"></div>
+  <span class="sync" id="syncMsg"></span>
+  <span class="lock hidden" id="lockMsg">🔒 선생님이 넘겨 줘요</span>
+  <span id="nav" class="hidden"><button class="btn ghost" id="prevBtn">◀</button> <button class="btn" id="nextBtn">다음 ▶</button></span>
+</footer>
 
 <!-- 교사 화면 -->
-<div class="wrap hidden" id="teacher" style="max-width:1000px">
-  <div class="tbar">
-    <div class="pgs" id="tPgs"></div>
-    <div class="ctl">
-      <button class="btn" id="tSend">📤 이 페이지로 학생 화면 넘기기</button>
-      <button class="btn ghost" id="tFree">🔓 자유 이동</button>
-      <span class="msg" id="tPrevMsg"></span>
-      <div class="tabs"><button class="btn ghost" id="tTabMirror">🖥 학생 화면</button><button class="btn ghost" id="tTabDash">📊 현황·TV·기록</button></div>
-    </div>
-    <div class="ctl">
-      <span class="note">보기</span><select id="tWho"></select>
-      <span class="note" style="margin-left:6px">📺 TV</span><span class="tvstate off" id="tvState2">가려짐</span>
-      <button class="btn ghost" id="tvToggle2">👁 보이기</button><select id="tvView2"></select>
-      <span class="note" id="tUpd2" style="margin-left:auto"></span>
-    </div>
-    <div class="strip" id="tStrip"></div>
+<div class="hidden" id="teacher">
+  <div class="tbar2">
+    <div><div class="now">학생 화면</div><div class="nowpg" id="tNow"></div></div>
+    <button class="btn dark" id="tPrev">◀ 이전</button>
+    <button class="btn go" id="tNext">다음 ▶</button>
+    <button class="btn dark" id="tPages">📋 페이지 목록</button>
+    <button class="btn dark" id="tFree">🔓 자유 이동</button>
+    <span class="sp"></span>
+    <div class="tvsw"><span>📺 TV</span><button class="btn off" id="tvToggle2">가려짐</button><select id="tvView2"></select></div>
+    <button class="btn dark" id="tMore">⋯ 더보기</button>
   </div>
-  <div id="tMirror" class="mirror"></div>
-  <div id="tDash" class="hidden">
-    <div class="card">
-      <h2>👩‍🏫 교사 화면</h2>
-      <p class="lead" id="tInfo"></p>
+  <div class="tbody">
+    <div id="tMirrorWrap" style="overflow:auto;min-height:0;background:var(--bg)">
+      <div class="viewing hidden" id="tViewing"></div>
+      <div id="tMirror" class="mirror"></div>
+      <div class="nextprev" id="tNextPrev"></div>
     </div>
-    <div class="card">
-      <div class="row"><b>📺 TV 화면</b> <span class="tvstate off" id="tvState">가려짐</span><span class="note" id="tvViewName"></span></div>
-      <div class="pagebtns">
-        <button class="btn" id="tvShow" style="border-color:var(--tree);color:var(--tree)">👁 보이기</button>
-        <button class="btn" id="tvHide" style="border-color:var(--warn);color:var(--warn)">🙈 가리기</button>
-        <button class="btn" id="tvOpen">🪟 TV 창 열기(새 창)</button>
-        <button class="btn" id="tvHere">🖥 이 화면을 TV 모드로</button>
-      </div>
-      <div class="note" style="margin-top:8px">보여 줄 내용</div>
-      <div class="pagebtns" id="tvViews"></div>
-      <p class="note" style="margin:10px 0 0">TV에는 이름이 나오지 않아요. 노트북을 TV에 그대로 연결(미러링)했다면 '이 화면을 TV 모드로'를 쓰고, 화면 아래쪽에 마우스를 올리면 조작 막대가 나와요.</p>
-    </div>
-    <div class="card">
-      <div class="row"><b>실시간 현황</b><span class="note" id="tUpd"></span></div>
-      <div class="live" id="liveGrid" style="margin-top:10px"></div>
-    </div>
-    <details class="card"><summary style="cursor:pointer;font-weight:700">학생별 자세한 기록 <button class="btn ghost sm" id="tCsv" style="margin-left:8px">CSV 저장</button></summary>
-      <div style="overflow:auto;max-height:70vh;margin-top:10px" id="tOut"></div>
-    </details>
-    <div class="card">
-      <div class="row"><b>🧨 완전 리셋</b><button class="btn sm" id="tReset" style="margin-left:auto;background:var(--warn)">11차시 기록 지우고 처음으로</button></div>
-      <p class="note" style="margin:6px 0 0">11차시 학생 기록을 모두 지우고, 학생 화면은 대기(0)·TV는 가림으로 돌아가요. 10차시 기록은 지워지지 않아요. 지운 기록은 되살릴 수 없으니 필요하면 먼저 CSV로 저장하세요.</p>
+    <div class="tside">
+      <div class="hd">👥 학생 <span class="cnt" id="tCnt"></span></div>
+      <div class="slist" id="tList"></div>
+      <div class="tside foot2" style="border-left:0"><span class="note" id="tUpd2"></span><span class="note">노란 줄 = 2분 넘게 입력 없음 · 빨간 쪽 = 뒤처짐</span></div>
     </div>
   </div>
 </div>
+
+<!-- 교사: 페이지 목록 -->
+<div class="modal hidden" id="mPages"><div class="mbox">
+  <div class="row"><b style="font-size:18px">📋 학생 화면을 어느 페이지로 넘길까요?</b><button class="btn ghost sm" style="margin-left:auto" data-close>닫기</button></div>
+  <div class="pagegrid" id="pageGrid"></div>
+</div></div>
+<!-- 교사: 더보기 -->
+<div class="modal hidden" id="mMore"><div class="mbox">
+  <div class="row"><b style="font-size:18px">⋯ 더보기</b><span class="note" id="tInfo"></span><button class="btn ghost sm" style="margin-left:auto" data-close>닫기</button></div>
+  <div class="pagebtns" style="margin:12px 0">
+    <button class="btn" id="tvOpen">🪟 TV 창 열기(새 창)</button>
+    <button class="btn" id="tvHere">🖥 이 화면을 TV 모드로</button>
+    <button class="btn ghost" id="tCsv">⬇️ 기록 CSV 저장</button>
+    <button class="btn" id="tReset" style="background:var(--warn)">🧨 기록 지우고 처음으로</button>
+  </div>
+  <p class="note">⚠️ '기록 지우고 처음으로'는 화요일 기록(내 기사문·자기평가)까지 모두 지워요. 화요일과 수요일 사이에는 누르지 마세요.</p>
+  <div style="overflow:auto;max-height:55vh" id="tOut"></div>
+</div></div>
 
 <!-- TV 화면 -->
 <div id="tv" class="hidden">
   <div class="tvhead"><h2 id="tvTitle"></h2><span class="sub" id="tvSub"></span></div>
   <div class="tvbody" id="tvBody"></div>
-  <div id="tvCover"><div class="big">📰</div><h2>기사문 고쳐 쓰기</h2><p>잠시 화면을 가려 두었어요</p></div>
+  <div id="tvCover"><div class="big">📰</div><h2>기사문 쓰기·고쳐 쓰기</h2><p>잠시 화면을 가려 두었어요</p></div>
 </div>
 <div id="tvBar" class="hidden"></div>
 
 <div class="toast" id="toast"></div>
 <script>
 /* ===================== 학습 내용 ===================== */
-const PAGES = ["대기","어떤 기사를 먼저?","오늘 살펴볼 점","짝 첨삭 정리","짝 vs AI 비교","고쳐 쓰기","확인·돌아보기"];
+const PAGES = ["대기","내 기사문 쓰기","자기평가","글 옮기고 저장","어떤 기사를 먼저?","오늘 살펴볼 점","짝 첨삭(종이)","짝 vs AI 비교","고쳐 쓰기","확인·돌아보기"];
+const DAY = [0,1,1,1,2,2,2,2,2,2];          // 1 = 화요일(쓰기·자기평가), 2 = 수요일(고쳐 쓰기)
+const DAY_NAME = {1:"화 · 쓰기·자기평가",2:"수 · 고쳐 쓰기"};
 const LAST = PAGES.length - 1;
-const DONE = ["p1","p2","p3","p4","p5","p6"];
+const DONE = ["p1","p2","p3","p4","p5","p6","p7","p8","p9"];
+const CHECKS = [["chk_t1","표제"],["chk_t2","부제"],["chk_lead","전문(육하원칙)"],["chk_body","본문"],["chk_data","자료"],["chk_src","출처"]];
 const ITEMS = [
   {key:"topic", name:"기삿거리", q:"관심을 끌 만한 기삿거리를 골랐나요?",
    tree:"우리 학교 친구들이 관심을 가질 만한 사실을 골랐고, 왜 알려야 하는지가 드러나요.",
@@ -462,6 +682,11 @@ const ITEMS = [
 ];
 const LEVELS = [{v:"나무",c:"tree",e:"🌳"},{v:"새싹",c:"sprout",e:"🌱"},{v:"씨앗",c:"seed",e:"🌰"}];
 const LV_RANK = {"씨앗":1,"새싹":2,"나무":3};
+const ARTICLE_BODY = [
+  "우리 학교 어린이 기자단은 10월 6일 점심시간에 교실 12곳을 살펴본 결과, 아무도 없는 교실 7곳에 전등이 켜져 있었다고 밝혔다.",
+  "기자단이 전교생 60명에게 물어보니 '교실을 나갈 때 전등을 끈다'고 답한 학생은 24명이었다. 전등을 끄지 않은 까닭으로는 '다른 친구가 끌 줄 알았다'는 답이 가장 많았다.",
+  "6학년 학생 한 명은 \"마지막에 나가는 사람이 끄는 약속을 정하면 좋겠다.\"라고 말했다."
+];
 const TITLES = [
   {v:"㉠", t:"학교 에너지 절약"},
   {v:"㉡", t:"텅 빈 교실에 전등만 '활짝'… 우리 학교 에너지 낭비 이대로 괜찮을까?"}
@@ -498,7 +723,8 @@ const DB = (()=>{
   return {
     init(){ if(FB){ firebase.initializeApp(CONFIG.FIREBASE); db=firebase.database(); } },
     async save(num,name,d){
-      if(FB){try{await db.ref(`${NS}/rows/s${num}`).set({num:String(num),name,time:new Date().toISOString(),data:JSON.stringify(d)});return true}catch(e){return false}}
+      /* 키 단위로 합쳐 저장 → 다른 태블릿에서 빈 상태로 들어와도 기존 기록이 지워지지 않음 */
+      if(FB){try{const clean=JSON.parse(JSON.stringify(d));await db.ref(`${NS}/rows/s${num}`).update({num:String(num),name,time:new Date().toISOString()});if(Object.keys(clean).length)await db.ref(`${NS}/rows/s${num}/data`).update(clean);return true}catch(e){return false}}
       if(SHEET)return sheetPost({action:"save",num,name,data:d,time:new Date().toISOString()});
       return true;
     },
@@ -516,6 +742,11 @@ const DB = (()=>{
       if(FB){db.ref(`${NS}/rows`).on('value',sn=>{const v=sn.val()||{};cb(fixRows(Object.values(v)))});return}
       const tick=async()=>{try{cb(SHEET?fixRows((await sheetGet('action=rows')).rows||[]):fixRows(localRows()))}catch(e){}};
       tick();setInterval(tick,CONFIG.LIVE_MS);
+    },
+    async getRow(num){
+      if(FB){const sn=await db.ref(`${NS}/rows/s${num}`).once('value');const v=sn.val();if(!v)return null;return typeof v.data==='string'?JSON.parse(v.data):v.data}
+      if(SHEET){const j=await sheetGet('action=rows');const r=(j.rows||[]).find(x=>String(x.num)===String(num));if(!r)return null;return typeof r.data==='string'?JSON.parse(r.data):r.data}
+      return null;
     },
     async reset(id){
       if(FB){await db.ref(`${NS}/rows`).remove();await db.ref(`${NS}/state`).set({page:0,tv:DEFAULT_STATE.tv,resetId:id});return}
@@ -556,10 +787,22 @@ function chipGroup(groupKey, options, cls, onPick){
     const v=o.v||o;const b=document.createElement('button');b.type='button';b.className='chip '+(o.c||cls||'');
     b.textContent=(o.e?o.e+' ':'')+(o.label||v);b.dataset.val=v;
     b.setAttribute('aria-pressed', data[groupKey]===v?'true':'false');
-    b.onclick=()=>{data[groupKey]=v;wrap.querySelectorAll('.chip').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));touch();onPick&&onPick(v)};
+    b.onclick=()=>{data[groupKey]=v;syncChips();touch();onPick&&onPick(v)};
     wrap.appendChild(b);
   });
   return wrap;
+}
+/* 여러 개를 켜고 끄는 체크 칩 */
+function tickGroup(list){
+  const wrap=document.createElement('div');wrap.className='chips';wrap.dataset.multi=list.map(x=>x[0]).join(',');
+  list.forEach(([k,label])=>{const b=document.createElement('button');b.type='button';b.className='chip tick';b.textContent=label;b.dataset.tk=k;
+    b.setAttribute('aria-pressed',data[k]?'true':'false');
+    b.onclick=()=>{data[k]=data[k]?'':'✓';b.setAttribute('aria-pressed',data[k]?'true':'false');touch()};wrap.appendChild(b)});
+  return wrap;
+}
+function syncChips(){
+  document.querySelectorAll('#app .chips[data-key]').forEach(w=>{const v=data[w.dataset.key];w.querySelectorAll('.chip').forEach(b=>b.setAttribute('aria-pressed',b.dataset.val===v?'true':'false'))});
+  document.querySelectorAll('#app .chip[data-tk]').forEach(b=>b.setAttribute('aria-pressed',data[b.dataset.tk]?'true':'false'));
 }
 function bindText(id,key,onChange){const el=$(id);el.value=data[key]||"";el.oninput=()=>{data[key]=el.value;touch();onChange&&onChange()};}
 function rubricHTML(){
@@ -567,46 +810,44 @@ function rubricHTML(){
   ITEMS.forEach(it=>{h+=`<tr><th>${it.name}<br><small style="font-weight:400;color:var(--muted)">${it.q}</small></th><td>${it.tree}</td><td>${it.sprout}</td><td>${it.seed}</td></tr>`});
   return h+'</tbody></table>';
 }
+function rubricSide(){
+  return '<h4>📋 평가 기준표</h4>'+ITEMS.map(it=>`<div class="rub-c"><div class="nm">${it.name} <span class="qq">${it.q}</span></div><div>🌳 ${it.tree}</div><div>🌱 ${it.sprout}</div><div>🌰 ${it.seed}</div></div>`).join('');
+}
 const lvE=v=>{const l=LEVELS.find(x=>x.v===v);return l?`${l.e} ${l.v}`:'–'};
 function rateTable(id,prefix,opts,thExtra){
   const t=$(id);t.innerHTML='';
   ITEMS.forEach(it=>{const tr=document.createElement('tr');tr.innerHTML=`<th>${it.name}<small>${thExtra?thExtra(it):it.q}</small></th>`;
     const td=document.createElement('td');td.appendChild(chipGroup(prefix+it.key,opts,'',()=>refreshDynamic()));tr.appendChild(td);t.appendChild(tr)});
 }
-function buildP1(){
-  $('titleCards').innerHTML=TITLES.map((x,i)=>`<div class="article"><span class="tag" style="background:${i?'#2f6fdb':'#5b616b'}">기사 ${x.v}</span><div class="t1">${esc(x.t)}</div><p class="note">(내용은 두 기사가 똑같아요)</p></div>`).join('');
+/* --- 화요일 --- */
+function buildP1(){bindText('myTitle','myTitle');bindText('mySub','mySub');const b=$('chkBox');b.innerHTML='';b.appendChild(tickGroup(CHECKS));}
+function buildP2(){$('rubricSide2').innerHTML=rubricSide();rateTable('preTbl','pre_',LEVELS);bindText('strong','strong');bindText('grow','grow');}
+function buildP3(){bindText('myArticle','myArticle');const b=$('savedBox');b.innerHTML='';b.appendChild(tickGroup([["up_padlet","📌 패들렛에 올렸어요"],["up_kiwi","💾 키위런에 저장했어요"]]));}
+/* --- 수요일 --- */
+function buildP4(){
+  $('titleCards').innerHTML=TITLES.map((x,i)=>`<div class="article"><span class="tag" style="background:${i?'#2f6fdb':'#5b616b'}">기사 ${x.v}</span><div class="t1">${esc(x.t)}</div>${ARTICLE_BODY.map(p=>`<p>${esc(p)}</p>`).join('')}</div>`).join('');
   const pb=$('pickBox');pb.innerHTML='';pb.appendChild(chipGroup('pick',TITLES.map(x=>({v:x.v,label:'기사 '+x.v}))));
   bindText('pickWhy','pickWhy');
 }
-function renderPrevInfo(){
-  const box=$('prevInfo');
-  if(TEACHER&&tWho==='all'){box.innerHTML='👀 학생마다 지난 시간(10차시) 자기평가와 「내 기사 제목·자신 있는 점·키우고 싶은 점」이 여기 나와요.';return}
-  const p=TEACHER?data._prev:prev10;
-  if(!p){box.innerHTML='지난 시간 기록을 찾지 못했어요. 아래에서 내 기사문을 다시 평가해 주세요.';return}
-  box.innerHTML=`${p.myTitle?`<div>📰 내 기사 제목: <b>${esc(p.myTitle)}</b></div>`:''}${p.strong?`<div>💪 자신 있는 점: ${esc(p.strong)}</div>`:''}${p.grow?`<div>🌱 키우고 싶은 점: <b>${esc(p.grow)}</b></div>`:''}`;
+function renderMySum(){
+  const box=$('mySum5');if(!box)return;
+  if(TEACHER&&tWho==='all'){box.innerHTML='👀 학생마다 어제 쓴 표제·자신 있는 점·키우고 싶은 점이 나와요.';return}
+  box.innerHTML=`<h4>🗂 어제 내가 쓴 것</h4>${data.myTitle?`<div>📰 표제: <b>${esc(data.myTitle)}</b></div>`:''}${data.strong?`<div>💪 자신 있는 점: ${esc(data.strong)}</div>`:''}${data.grow?`<div>🌱 키우고 싶은 점: <b>${esc(data.grow)}</b></div>`:''}${!data.myTitle&&!data.strong&&!data.grow?'<div class="note">어제 기록이 없어요. 오른쪽에서 자기평가를 해 주세요.</div>':''}`;
 }
-function buildP2(){
-  renderPrevInfo();
-  rateTable('preTbl','pre_',LEVELS);
-  const fb=$('focusBox');fb.innerHTML='';fb.appendChild(chipGroup('focus',ITEMS.map(i=>i.name)));
-  $('rubricBox').innerHTML=rubricHTML();
-}
-function buildP3(){
-  const s=$('partner');
-  s.innerHTML='<option value="">짝 번호 고르기</option>'+CONFIG.NUMBERS.filter(n=>!me||String(n)!==String(me.num)).map(n=>`<option value="${n}">${n}번</option>`).join('');
-  s.value=data.partner||'';s.onchange=()=>{data.partner=s.value;touch()};
-  rateTable('peerTbl','peer_',SAID);
-  bindText('peerNote','peerNote');
-}
-function buildP4(){
+function buildP5(){rateTable('preTbl5','pre_',LEVELS);const fb=$('focusBox');fb.innerHTML='';fb.appendChild(chipGroup('focus',ITEMS.map(i=>i.name)));renderMySum();}
+function buildP6(){}
+function buildP7(){
+  $('rubricSide7').innerHTML=rubricSide();
   const box=$('cmpCards');box.innerHTML='';
   ITEMS.forEach(it=>{
     const k=it.key;const c=document.createElement('div');c.className='ccard';c.dataset.key=k;
     c.innerHTML=`<div class="ch">${it.name}<span class="mine" id="mine_${k}"></span></div>`;
-    const l1=document.createElement('label');l1.className='q';l1.textContent='AI가 준 단계';c.appendChild(l1);
-    c.appendChild(chipGroup('ai_'+k,LEVELS,'',()=>refreshDynamic()));
-    const l2=document.createElement('label');l2.className='q';l2.textContent='AI가 고칠 점을 말했나요?';c.appendChild(l2);
-    c.appendChild(chipGroup('aifix_'+k,SAID,'',()=>refreshDynamic()));
+    const g3=document.createElement('div');g3.className='g3';
+    const cell=(t,el)=>{const w=document.createElement('div');const l=document.createElement('label');l.className='q';l.textContent=t;w.appendChild(l);w.appendChild(el);g3.appendChild(w)};
+    cell('🤝 짝의 제안',chipGroup('peer_'+k,[{v:'말함',label:'✏️ 있어요'},{v:'없음',label:'– 없어요'}],'',()=>refreshDynamic()));
+    cell('🤖 AI가 고칠 점',chipGroup('aifix_'+k,[{v:'말함',label:'✏️ 있어요'},{v:'없음',label:'– 없어요'}],'',()=>refreshDynamic()));
+    cell('🤖 AI가 준 단계',chipGroup('ai_'+k,LEVELS,'',()=>refreshDynamic()));
+    c.appendChild(g3);
     const rule=document.createElement('div');rule.id='rule_'+k;rule.className='rule hidden';c.appendChild(rule);
     const dw=document.createElement('div');dw.id='dec_'+k;dw.className='hidden';
     const l3=document.createElement('label');l3.className='q';l3.textContent='나는 어떻게 할까요?';dw.appendChild(l3);
@@ -618,11 +859,11 @@ function buildP4(){
   const g2=$('goal2Box');g2.innerHTML='';g2.appendChild(chipGroup('goal2',[...ITEMS.map(i=>i.name),'없음'],'',()=>refreshDynamic()));
   bindText('plan','plan',()=>refreshDynamic());
 }
-function buildP5(){
+function buildP8(){
   rateTable('ai2Tbl','ai2_',LEVELS,it=>`처음 AI: ${lvE(data['ai_'+it.key])}`);
   const pb=$('postedBox');pb.innerHTML='';pb.appendChild(chipGroup('posted',[{v:'올렸어요',label:'✅ 패들렛에 올렸어요'}]));
 }
-function buildP6(){
+function buildP9(){
   const qb=$('quizBox');qb.innerHTML='';
   QUIZ.forEach((q,i)=>{const d=document.createElement('div');d.className='quiz';d.innerHTML=`<div style="font-weight:700;margin-bottom:6px">${i+1}. ${esc(q.q)}</div>`;
     d.appendChild(chipGroup(q.k,q.opts));const fb=document.createElement('div');fb.className='feedback';fb.id='fb_'+q.k;d.appendChild(fb);qb.appendChild(d)});
@@ -647,7 +888,7 @@ const RULE_TXT={must:'🔴 짝도 AI도 말했어요 → 반드시 고치기 (�
 function refreshDynamic(){
   const all=TEACHER&&tWho==='all';
   ITEMS.forEach(it=>{const k=it.key;
-    const mine=$('mine_'+k);if(mine)mine.textContent=all?'학생마다 달라요':`내 평가 ${lvE(data['pre_'+k])} · 짝 ${data['peer_'+k]==='말함'?'✏️ 고칠 점':data['peer_'+k]==='없음'?'– 없음':'?'}`;
+    const mine=$('mine_'+k);if(mine)mine.textContent=all?'학생마다 달라요':`내 처음 평가 ${lvE(data['pre_'+k])}`;
     const r=ruleOf(data,k), rule=$('rule_'+k), dw=$('dec_'+k);if(!rule)return;
     if(all){rule.className='rule hidden';dw.classList.remove('hidden');return}
     rule.className='rule '+(r||'')+(r?'':' hidden');rule.textContent=r?RULE_TXT[r]:'';
@@ -658,26 +899,30 @@ function refreshDynamic(){
   const mh=$('mustHint');if(mh)mh.textContent=all?'':(musts.length||judges.length?`💡 고칠 기준 후보: ${[...musts.map(m=>m+'(반드시)'),...judges].join(', ')}`:'');
   const gb=$('goalBox');
   if(gb){const gs=[data.goal1,data.goal2].filter(g=>g&&g!=='없음');
-    gb.innerHTML=all?'👀 학생마다 재도전 목표와 고칠 계획이 여기 나와요.':(gs.length?`<div>🎯 내 재도전 목표: <span class="g">${gs.join(', ')}</span></div>${gs.map(g=>{const it=ITEMS.find(i=>i.name===g);return it?`<div class="note">🌳 ${g} 나무: ${it.tree}</div>`:''}).join('')}${data.plan?`<div style="margin-top:4px">📝 ${esc(data.plan)}</div>`:''}`:'4페이지에서 재도전 목표를 먼저 정해요.');}
-  ITEMS.forEach(it=>{
-    const a=$('ai2Tbl')?.querySelector(`tr:nth-child(${ITEMS.indexOf(it)+1}) small`);if(a)a.innerHTML=all?'':`처음 AI: ${lvE(data['ai_'+it.key])}`;
-    const p=$('postTbl')?.querySelector(`tr:nth-child(${ITEMS.indexOf(it)+1}) small`);if(p)p.innerHTML=all?'':`<span class="arrow">처음: ${lvE(data['pre_'+it.key])}${data['post_'+it.key]?' → 지금: '+lvE(data['post_'+it.key])+((LV_RANK[data['post_'+it.key]]||0)>(LV_RANK[data['pre_'+it.key]]||0)?' ⬆️':''):''}</span>`;
+    gb.innerHTML=all?'👀 학생마다 재도전 목표와 고칠 계획이 여기 나와요.':(gs.length?`<div>🎯 내 재도전 목표: <span class="g">${gs.join(', ')}</span></div>${gs.map(g=>{const it=ITEMS.find(i=>i.name===g);return it?`<div class="note">🌳 ${g} 나무: ${it.tree}</div>`:''}).join('')}${data.plan?`<div style="margin-top:4px">📝 ${esc(data.plan)}</div>`:''}`:'7페이지에서 재도전 목표를 먼저 정해요.');}
+  ITEMS.forEach((it,i)=>{
+    const a=$('ai2Tbl')?.querySelector(`tr:nth-child(${i+1}) small`);if(a)a.innerHTML=all?'':`처음 AI: ${lvE(data['ai_'+it.key])}`;
+    const p=$('postTbl')?.querySelector(`tr:nth-child(${i+1}) small`);if(p)p.innerHTML=all?'':`<span class="arrow">처음: ${lvE(data['pre_'+it.key])}${data['post_'+it.key]?' → 지금: '+lvE(data['post_'+it.key])+((LV_RANK[data['post_'+it.key]]||0)>(LV_RANK[data['pre_'+it.key]]||0)?' ⬆️':''):''}</span>`;
   });
-  renderPrevInfo();
+  renderMySum();
 }
 const REQUIRED={
-  p1:()=>data.pick&&tr_(data.pickWhy),
-  p2:()=>ITEMS.every(it=>data['pre_'+it.key])&&data.focus,
-  p3:()=>data.partner&&ITEMS.every(it=>data['peer_'+it.key]),
-  p4:()=>ITEMS.every(it=>{const k=it.key;if(!data['ai_'+k]||!data['aifix_'+k])return false;const r=ruleOf(data,k);
+  p1:()=>tr_(data.myTitle),
+  p2:()=>ITEMS.every(it=>data['pre_'+it.key])&&tr_(data.strong)&&tr_(data.grow),
+  p3:()=>tr_(data.myArticle).length>=20&&data.up_padlet&&data.up_kiwi,
+  p4:()=>data.pick&&tr_(data.pickWhy),
+  p5:()=>ITEMS.every(it=>data['pre_'+it.key])&&data.focus,
+  p6:()=>true,
+  p7:()=>ITEMS.every(it=>{const k=it.key;if(!data['peer_'+k]||!data['ai_'+k]||!data['aifix_'+k])return false;const r=ruleOf(data,k);
       if(r==='judge')return data['decide_'+k]&&tr_(data['why_'+k]);
       if(r==='must')return data['decide_'+k]&&(data['decide_'+k]==='고칠래요'||tr_(data['why_'+k]));
       return true})&&data.goal1&&tr_(data.plan),
-  p5:()=>data.posted,
-  p6:()=>QUIZ.every(q=>data[q.k])&&ITEMS.every(it=>data['post_'+it.key])&&tr_(data.changed)&&data.helpful&&tr_(data.helpfulWhy)&&tr_(data.next)
+  p8:()=>data.posted,
+  p9:()=>QUIZ.every(q=>data[q.k])&&ITEMS.every(it=>data['post_'+it.key])&&tr_(data.changed)&&data.helpful&&tr_(data.helpfulWhy)&&tr_(data.next)
 };
-const MSG={p1:"기사를 고르고 까닭을 써 주세요.",p2:"네 기준을 모두 평가하고, 살펴볼 기준을 골라 주세요.",p3:"짝 번호와 네 기준을 모두 골라 주세요.",
-  p4:"AI 단계·고칠 점을 모두 표시하고, 판단과 까닭, 재도전 목표와 계획을 써 주세요.",p5:"패들렛에 올렸는지 표시해 주세요.",p6:"세 문항, 자기평가, 돌아보기를 모두 해 주세요."};
+const MSG={p1:"내 기사의 표제를 써 주세요.",p2:"네 기준을 모두 고르고, 자신 있는 점과 키우고 싶은 점을 써 주세요.",p3:"내 기사문을 붙여 넣고, 패들렛·키위런 두 가지를 모두 눌러 주세요.",
+  p4:"기사를 고르고 까닭을 써 주세요.",p5:"네 기준을 모두 고르고, 살펴볼 기준을 골라 주세요.",p6:"",
+  p7:"짝 제안·AI 단계·AI 지적을 모두 표시하고, 판단과 까닭, 재도전 목표와 계획을 써 주세요.",p8:"패들렛에 올렸는지 표시해 주세요.",p9:"세 문항, 자기평가, 돌아보기를 모두 해 주세요."};
 function markSaved(){DONE.forEach(s=>$(s).classList.toggle('saved',!!(data.done||{})[s]))}
 document.querySelectorAll('[data-save]').forEach(b=>b.onclick=async()=>{
   const s=b.dataset.save;if(!REQUIRED[s]()){toast(MSG[s]);return}
@@ -690,12 +935,18 @@ function showPage(p){
   p=Math.max(0,Math.min(LAST,p));
   const changed=p!==page;page=p;
   document.querySelectorAll('#app [data-page]').forEach(el=>el.classList.toggle('hidden',+el.dataset.page!==page));
-  const prog=$('prog');prog.classList.toggle('hidden',page===0);
-  prog.innerHTML=PAGES.slice(1).map((_,i)=>`<span class="${i+1<=page?'on':''}"></span>`).join('');
-  $('nav').classList.toggle('hidden',!freeMode||page===0);
-  $('lockMsg').classList.toggle('hidden',freeMode||page===0||page===LAST);
-  $('prevBtn').disabled=page<=1;$('nextBtn').disabled=page>=LAST;
-  if(changed){refreshDynamic();if(!TEACHER){window.scrollTo({top:0,behavior:'smooth'});lsSet(LS_KEY()+'_page',page);touch()}}
+  if(!TEACHER){
+    const dt=$('dayTag');dt.classList.toggle('hidden',!DAY[page]);dt.textContent=DAY_NAME[DAY[page]]||'';dt.className='day'+(DAY[page]===2?' d2':'')+(DAY[page]?'':' hidden');
+    const d=DAY[page]||(lsGet(LS_KEY()+'_day')||1);
+    const idx=PAGES.map((_,i)=>i).filter(i=>DAY[i]===d);
+    $('steps2').innerHTML=idx.map(i=>`<span class="${i<page?'on':''}${i===page?' cur':''}" title="${PAGES[i]}"></span>`).join('');
+    $('pgName').textContent=page?`${page}. ${PAGES[page]}`:'';
+    $('nav').classList.toggle('hidden',!freeMode||page===0);
+    $('lockMsg').classList.toggle('hidden',freeMode||page===0);
+    $('prevBtn').disabled=page<=1;$('nextBtn').disabled=page>=LAST;
+    if(DAY[page])lsSet(LS_KEY()+'_day',DAY[page]);
+  }
+  if(changed){refreshDynamic();if(!TEACHER){document.querySelectorAll('#app .side,#app .main').forEach(el=>el.scrollTop=0);lsSet(LS_KEY()+'_page',page);touch()}}
 }
 $('prevBtn').onclick=()=>showPage(page-1);
 $('nextBtn').onclick=()=>showPage(page+1);
@@ -729,24 +980,31 @@ $('startBtn').onclick=()=>{
   try{sessionStorage.setItem(NS+'_me',JSON.stringify(me))}catch(e){}
   start();
 };
+/* 10차시에 이미 한 자기평가가 있으면 빈칸에 채워 넣기 */
 function applyPrev(){
   if(!prev10)return;
   ITEMS.forEach(it=>{if(!data['pre_'+it.key]&&prev10['self_'+it.key])data['pre_'+it.key]=prev10['self_'+it.key]});
-  data._prev={myTitle:prev10.myTitle||'',strong:prev10.strong||'',grow:prev10.grow||''};
+  ['myTitle','strong','grow'].forEach(k=>{if(!tr_(data[k])&&tr_(prev10[k]))data[k]=prev10[k]});
 }
-function buildAll(){buildP1();buildP2();buildP3();buildP4();buildP5();buildP6();markSaved();refreshDynamic();}
+function buildAll(){buildP1();buildP2();buildP3();buildP4();buildP5();buildP6();buildP7();buildP8();buildP9();markSaved();refreshDynamic();}
 async function start(){
-  $('loginWrap').classList.add('hidden');$('app').classList.remove('hidden');
+  $('loginWrap').classList.add('hidden');$('app').classList.remove('hidden');$('foot').classList.remove('hidden');
   $('who').textContent=`${me.num}번 ${me.name}`;
-  prev10=await loadPrev10(me.num);
+  showPage(0);$('syncMsg').textContent='불러오는 중…';
+  const timeout=(p,ms)=>Promise.race([p,new Promise(r=>setTimeout(()=>r(null),ms))]);
+  /* 다른 태블릿으로 들어와도 어제 기록을 이어 쓰도록 서버 기록과 합치기 */
+  if(LIVE){try{const srv=await timeout(DB.getRow(me.num),4000);if(srv&&(!data._at||(srv._at&&srv._at>data._at)))data=Object.assign({},srv)}catch(e){}}
+  prev10=await timeout(loadPrev10(me.num),4000);
+  $('syncMsg').textContent='';
   if(LIVE){ showPage(0); DB.onState(onStudentState); }
   else { applyPrev(); buildAll(); showPage(lsGet(LS_KEY()+'_page')||1); }
 }
 
 /* ===================== 교사 화면 ===================== */
-let tRows=[], tState=normState(), holdUntil=0, tView=0, tWho='all', prevAns={}, rTimer=null;
+let tRows=[], tState=normState(), holdUntil=0, tWho='all', prevAns={}, rTimer=null;
 async function setState(patch){await DB.setState(patch)}
 const TV_VIEWS = {
+  pre:    {label:"🪞 처음 자기평가", title:"우리 반 처음 자기평가", render:rows=>tvDist(rows,'pre_')},
   pick:   {label:"🗳 어떤 기사를 먼저?", title:"어떤 기사를 먼저 읽고 싶나요?", render:tvPick},
   focus:  {label:"🔎 살펴볼 기준", title:"오늘 짝에게 봐 달라고 할 기준", render:tvFocus},
   rubric: {label:"📋 평가 기준표", title:"우리 반 평가 기준", render:()=>rubricHTML()},
@@ -807,29 +1065,28 @@ function tvProgress(rows){
 function pageFill(d,p){
   const t=k=>tr_(d[k])?1:0, c=k=>d[k]?1:0, n=pre=>ITEMS.filter(it=>d[pre+it.key]).length;
   switch(p){
-    case 1:return [c('pick')+t('pickWhy'),2];
-    case 2:return [n('pre_')+c('focus'),ITEMS.length+1];
-    case 3:return [c('partner')+n('peer_'),ITEMS.length+1];
-    case 4:return [n('ai_')+n('aifix_')+c('goal1')+t('plan'),ITEMS.length*2+2];
-    case 5:return [c('posted'),1];
-    case 6:return [QUIZ.filter(q=>d[q.k]).length+n('post_')+t('changed')+c('helpful')+t('helpfulWhy')+t('next'),QUIZ.length+ITEMS.length+4];
+    case 1:return [t('myTitle')+CHECKS.filter(x=>d[x[0]]).length,1+CHECKS.length];
+    case 2:return [n('pre_')+t('strong')+t('grow'),ITEMS.length+2];
+    case 3:return [(tr_(d.myArticle).length>=20?1:0)+c('up_padlet')+c('up_kiwi'),3];
+    case 4:return [c('pick')+t('pickWhy'),2];
+    case 5:return [n('pre_')+c('focus'),ITEMS.length+1];
+    case 6:return [(d.done||{}).p6?1:0,1];
+    case 7:return [n('peer_')+n('ai_')+n('aifix_')+c('goal1')+t('plan'),ITEMS.length*3+2];
+    case 8:return [c('posted'),1];
+    case 9:return [QUIZ.filter(q=>d[q.k]).length+n('post_')+t('changed')+c('helpful')+t('helpfulWhy')+t('next'),QUIZ.length+ITEMS.length+4];
   }
   return null;
 }
-function pagePreview(d,p){
-  const j=a=>a.map(tr_).filter(Boolean).join(' / ');
-  switch(p){case 1:return (d.pick?'기사 '+d.pick+' · ':'')+tr_(d.pickWhy);case 2:return d.focus?'살펴볼 기준: '+d.focus:'';case 3:return tr_(d.peerNote);
-    case 4:return j([d.goal1&&'목표: '+d.goal1,d.plan]);case 5:return d.posted||'';case 6:return j([d.changed,d.next]);}
-  return '';
-}
 const FIELDS=[
-  ['pick','먼저 읽을 기사'],['pickWhy','까닭'],
-  ...ITEMS.map(i=>['pre_'+i.key,'처음 자기평가_'+i.name]),['focus','살펴볼 기준'],
-  ['partner','짝'],...ITEMS.map(i=>['peer_'+i.key,'짝_'+i.name]),['peerNote','짝이 한 말'],
+  ['myTitle','표제'],['mySub','부제'],...CHECKS.map(x=>[x[0],'들어감_'+x[1]]),
+  ...ITEMS.map(i=>['pre_'+i.key,'처음 자기평가_'+i.name]),['strong','자신 있는 점'],['grow','키우고 싶은 점'],
+  ['myArticle','처음 기사문'],['up_padlet','패들렛'],['up_kiwi','키위런 저장'],
+  ['pick','먼저 읽을 기사'],['pickWhy','까닭'],['focus','살펴볼 기준'],
+  ...ITEMS.map(i=>['peer_'+i.key,'짝 제안_'+i.name]),
   ...ITEMS.map(i=>['ai_'+i.key,'AI단계_'+i.name]),...ITEMS.map(i=>['aifix_'+i.key,'AI지적_'+i.name]),
   ...ITEMS.flatMap(i=>[['decide_'+i.key,'판단_'+i.name],['why_'+i.key,'까닭_'+i.name]]),
   ['goal1','목표1'],['goal2','목표2'],['plan','고칠 계획'],
-  ...ITEMS.map(i=>['ai2_'+i.key,'고친 뒤 AI_'+i.name]),['posted','패들렛'],
+  ...ITEMS.map(i=>['ai2_'+i.key,'고친 뒤 AI_'+i.name]),['posted','고친 글 패들렛'],
   ...QUIZ.map((q,i)=>[q.k,'문항'+(i+1)]),...ITEMS.map(i=>['post_'+i.key,'고친 뒤 자기평가_'+i.name]),
   ['changed','고친 점'],['helpful','도움 된 피드백'],['helpfulWhy','그 까닭'],['next','다짐']
 ];
@@ -842,139 +1099,145 @@ function csvT(){
   const head=['번호','이름',...FIELDS.map(f=>f[1])];
   const rows=tRows.map(r=>[r.num,r.name,...FIELDS.map(f=>r.data[f[0]]??'')]);
   const csv='﻿'+[head,...rows].map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
-  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='기사문_11차시_결과.csv';a.click();
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='기사문_쓰기고쳐쓰기_결과.csv';a.click();
 }
 function ago(iso){if(!iso)return '';const s=Math.round((Date.now()-new Date(iso))/1000);if(s<10)return '방금';if(s<60)return s+'초 전';if(s<3600)return Math.floor(s/60)+'분 전';return Math.floor(s/3600)+'시간 전'}
-function renderLive(){
-  const byNum={};tRows.forEach(r=>byNum[r.num]=r);
-  const tp=tState.page==='free'?null:+tState.page;
-  $('liveGrid').innerHTML=CONFIG.NUMBERS.map(n=>{const r=byNum[String(n)];
-    if(!r)return `<div class="st off"><div class="nm">${n}번</div><div class="last">아직 안 들어옴</div></div>`;
-    const d=r.data,pg=+d._page||0,idle=d._at&&(Date.now()-new Date(d._at))>120000,behind=tp!=null&&pg<tp;
-    const dots=DONE.map(s=>`<span class="${(d.done||{})[s]?'on':''}"></span>`).join('');
-    const f=pageFill(d,pg),isDone=!!(d.done||{})['p'+pg];
-    const fill=f?`<div class="fill ${f[0]>=f[1]?'full':''}"><div class="track"><i style="width:${f[1]?f[0]/f[1]*100:0}%"></i></div>${f[0]}/${f[1]}${isDone?' ✅':''}</div>`:'';
-    const pv=pagePreview(d,pg);
-    return `<div class="st ${idle?'idle':''} ${behind?'behind':''} ${isDone?'done':''}"><div class="nm">${n}번 ${esc(r.name)}</div><span class="pg">${pg}. ${PAGES[pg]||''}</span>${fill}${pv?`<div class="pv">${esc(pv)}</div>`:''}<div class="dots">${dots}</div><div class="last">${ago(d._at)}</div></div>`}).join('');
-}
 
+const curPage=()=>tState.page==='free'?null:(+tState.page||0);
 function teacher(){
+  document.body.classList.add('tmode');
   $('loginWrap').classList.add('hidden');$('teacher').classList.remove('hidden');
-  $('who').textContent='교사';
-  $('tInfo').textContent=FB?'⚡ 실시간 연결(Firebase): 학생이 쓰면 바로 보이고, 페이지 넘기기도 바로 바뀌어요.'
-    :SHEET?'구글 시트 연결: 학생 기록과 페이지 넘기기가 몇 초 늦게 반영돼요.'
-    :'⚠️ 연결 설정이 비어 있어요. 학생은 직접 이전/다음으로 넘기고, 기록·TV는 이 기기에 저장된 것만 보여요(시연용).';
+  $('tInfo').textContent=FB?'⚡ Firebase 실시간 연결':SHEET?'구글 시트 연결(몇 초 늦게 반영)':'⚠️ 연결 설정이 비어 있어요(시연용)';
   TEACHER=true;me={num:'T',name:'교사'};data={};
   buildAll();
   $('tMirror').appendChild($('app'));$('app').classList.remove('hidden');
   document.querySelectorAll('#app input,#app textarea,#app select').forEach(el=>{el.readOnly=true;el.tabIndex=-1});
   addSlots();
-  const pg=$('tPgs');pg.innerHTML='';PAGES.forEach((n,i)=>{const b=document.createElement('button');b.textContent=`${i}. ${n}`;b.dataset.v=i;b.onclick=()=>{tView=i;viewPage()};pg.appendChild(b)});
-  $('tSend').disabled=!LIVE;$('tFree').disabled=!LIVE;
-  $('tSend').onclick=async()=>{tState.page=tView;holdUntil=Date.now()+5000;markT();await setState({page:tView});toast(`학생 화면을 ${tView}페이지로 넘겼어요`)};
-  $('tFree').onclick=async()=>{tState.page='free';holdUntil=Date.now()+5000;markT();await setState({page:'free'});toast('자유 이동으로 바꿨어요')};
-  $('tTabMirror').onclick=()=>{$('tMirror').classList.remove('hidden');$('tDash').classList.add('hidden');markTab()};
-  $('tTabDash').onclick=()=>{$('tMirror').classList.add('hidden');$('tDash').classList.remove('hidden');markTab()};
-  $('tWho').onchange=()=>{tWho=$('tWho').value;renderStrip();renderMirror()};
+  /* 페이지 이동: 누르면 바로 학생 화면이 바뀜 */
+  const go=async p=>{p=Math.max(0,Math.min(LAST,p));tState.page=p;holdUntil=Date.now()+4000;afterState();await setState({page:p});toast(`학생 화면 → ${p}. ${PAGES[p]}`)};
+  $('tPrev').onclick=()=>{const c=curPage();go(c==null?1:c-1)};
+  $('tNext').onclick=()=>{const c=curPage();go(c==null?1:c+1)};
+  $('tFree').onclick=async()=>{tState.page='free';holdUntil=Date.now()+4000;afterState();await setState({page:'free'});toast('자유 이동: 학생이 직접 넘겨요')};
+  $('tPages').onclick=()=>{renderPageGrid();$('mPages').classList.remove('hidden')};
+  $('tMore').onclick=()=>{renderT();$('mMore').classList.remove('hidden')};
+  document.querySelectorAll('.modal').forEach(m=>{m.onclick=e=>{if(e.target===m||e.target.hasAttribute('data-close'))m.classList.add('hidden')}});
+  window._go=go;
+  if(!LIVE){['tPrev','tNext','tFree'].forEach(id=>$(id).disabled=true)}
   $('tvToggle2').onclick=()=>setTV({show:!tState.tv.show});
   const tv2=$('tvView2');tv2.innerHTML=Object.entries(TV_VIEWS).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join('');
   tv2.onchange=()=>setTV({view:tv2.value,show:true});
-  const vb=$('tvViews');vb.innerHTML='';Object.entries(TV_VIEWS).forEach(([k,v])=>{const b=document.createElement('button');b.className='btn';b.textContent=v.label;b.dataset.v=k;b.onclick=()=>setTV({view:k,show:true});vb.appendChild(b)});
-  $('tvShow').onclick=()=>setTV({show:true});$('tvHide').onclick=()=>setTV({show:false});
   $('tvOpen').onclick=()=>window.open(location.pathname+'?tv','newsTV11');
-  $('tvHere').onclick=()=>openTV(true);
-  $('tCsv').onclick=e=>{e.preventDefault();csvT()};
-  $('tReset').onclick=resetAllT;
-  markTab();
-  let first=true;
-  DB.onState(s=>{if(Date.now()>holdUntil)tState=s;if(first){first=false;tView=tState.page==='free'?1:(+tState.page||0);viewPage()}markT();scheduleRender()});
+  $('tvHere').onclick=()=>{$('mMore').classList.add('hidden');openTV(true)};
+  $('tCsv').onclick=csvT;$('tReset').onclick=resetAllT;
+  DB.onState(s=>{if(Date.now()>holdUntil)tState=s;afterState()});
   DB.onRows(rows=>{tRows=rows;scheduleRender()});
-  setInterval(()=>{renderStrip();if(!$('tDash').classList.contains('hidden'))renderLive()},15000);
+  setInterval(renderList,15000);
+}
+function renderPageGrid(){
+  const c=curPage();let h='';
+  PAGES.forEach((n,i)=>{if(i===1)h+=`<div class="dl">${DAY_NAME[1]}</div>`;if(i===4)h+=`<div class="dl">${DAY_NAME[2]}</div>`;
+    h+=`<button data-p="${i}" class="${i===c?'cur':''}"><b>${i}. ${n}</b>${i===c?'<br><span class="note">← 지금 학생 화면</span>':''}</button>`});
+  $('pageGrid').innerHTML=h;
+  $('pageGrid').querySelectorAll('button').forEach(b=>b.onclick=()=>{$('mPages').classList.add('hidden');window._go(+b.dataset.p)});
+}
+/* 상태(페이지·TV)가 바뀌었을 때 */
+let lastShown=-1;
+function afterState(){
+  const c=curPage();
+  $('tNow').textContent=c==null?'🔓 자유 이동':`${c}. ${PAGES[c]}`;
+  const showP=c==null?Math.max(1,lastShown):c;
+  if(showP!==lastShown){lastShown=showP;showPage(showP);renderNextPrev();renderMirror();$('tMirrorWrap').scrollTop=0}
+  const tb=$('tvToggle2');tb.textContent=tState.tv.show?'👁 보이는 중':'🙈 가려짐';tb.className='btn '+(tState.tv.show?'on':'off');
+  $('tvView2').value=tState.tv.view;
+  renderList();
+  if(!$('tv').classList.contains('hidden')){renderTV();buildBar()}
+}
+/* 다음 페이지 미리 보기(할 일만) */
+function renderNextPrev(){
+  const c=lastShown,n=c+1,box=$('tNextPrev');
+  if(n>LAST){box.innerHTML='<h4>마지막 페이지예요</h4>';return}
+  const sec=$('p'+n);const todo=sec?sec.querySelector('.todo ol'):null;
+  box.innerHTML=`<h4>⏭ 다음 페이지 미리 보기 · ${n}. ${PAGES[n]}${DAY[n]!==DAY[c]&&DAY[c]?` <span class="day ${DAY[n]===2?'d2':''}" style="font-size:12px">${DAY_NAME[DAY[n]]}</span>`:''}</h4>${todo?`<ol style="margin:0;padding-left:22px">${todo.innerHTML}</ol>`:''}`;
 }
 function scheduleRender(){clearTimeout(rTimer);rTimer=setTimeout(()=>{
-  renderStrip();renderMirror();
-  if(!$('tDash').classList.contains('hidden')){renderLive();renderT()}
-  $('tUpd').textContent='· '+new Date().toLocaleTimeString('ko-KR')+' 기준';
+  renderList();renderMirror();
+  if(!$('mMore').classList.contains('hidden'))renderT();
+  $('tUpd2').textContent=new Date().toLocaleTimeString('ko-KR')+' 기준';
   if(!$('tv').classList.contains('hidden')){renderTV();buildBar()}
-},250)}
-function markTab(){const m=!$('tMirror').classList.contains('hidden');$('tTabMirror').classList.toggle('ghost',!m);$('tTabDash').classList.toggle('ghost',m);if(!m){renderLive();renderT()}}
+},200)}
 async function setTV(p){
-  tState.tv=Object.assign({},tState.tv,p);holdUntil=Date.now()+5000;markT();
-  if(!$('tv').classList.contains('hidden')){renderTV();buildBar()}
+  tState.tv=Object.assign({},tState.tv,p);holdUntil=Date.now()+4000;afterState();
   await setState({tv:tState.tv});
-}
-function markT(){
-  if(!$('tvState'))return;
-  document.querySelectorAll('#tvViews .btn').forEach(b=>b.classList.toggle('cur',b.dataset.v===tState.tv.view));
-  [$('tvState'),$('tvState2')].forEach(st=>{st.textContent=tState.tv.show?'보이는 중':'가려짐';st.className='tvstate '+(tState.tv.show?'on':'off')});
-  $('tvViewName').textContent='· '+(TV_VIEWS[tState.tv.view]||{}).label;
-  $('tvToggle2').textContent=tState.tv.show?'🙈 가리기':'👁 보이기';$('tvView2').value=tState.tv.view;
-  document.querySelectorAll('#tPgs button').forEach(b=>{b.classList.toggle('view',+b.dataset.v===tView);b.classList.toggle('sent',String(tState.page)===b.dataset.v)});
-  const sent=tState.page==='free'?'자유 이동':tState.page+'페이지';
-  if($('tPrevMsg'))$('tPrevMsg').textContent=(String(tState.page)===String(tView))?'':`👀 미리 보는 중 · 학생들은 지금 ${sent}`;
 }
 /* 입력 칸마다 아래에 '학생 답 모아 보기' 자리 */
 function addSlots(){
   const mk=(el,key,kind)=>{const d=document.createElement('div');d.className='ans';d.dataset.for=key;d.dataset.kind=kind;el.after(d)};
   document.querySelectorAll('#app input[type=text],#app textarea').forEach(el=>mk(el,el.id,'text'));
-  document.querySelectorAll('#app select').forEach(el=>mk(el,el.id,'chip'));
   document.querySelectorAll('#app .chips[data-key]').forEach(el=>mk(el,el.dataset.key,'chip'));
+  document.querySelectorAll('#app .chips[data-multi]').forEach(el=>mk(el,el.dataset.multi,'multi'));
 }
-function viewPage(){showPage(tView);markT();renderMirror()}
 const nameOf=r=>`${r.num}번 ${r.name||''}`.trim();
 function renderMirror(){
   const all=tWho==='all';
+  const v=$('tViewing');
+  if(all){v.classList.add('hidden')}else{const r=tRows.find(x=>x.num===tWho);v.classList.remove('hidden');
+    v.innerHTML=`👤 ${r?esc(nameOf(r)):tWho+'번'} 학생의 화면을 보고 있어요 ${r&&+r.data._page!==lastShown?`<span class="note">(이 학생은 지금 ${+r.data._page||0}쪽)</span>`:''}<button class="btn ghost" id="tBackAll" style="margin-left:auto">👥 모든 학생 답 보기</button>`;
+    $('tBackAll').onclick=()=>{tWho='all';renderList();renderMirror()}}
   document.querySelectorAll('#app .ans').forEach(el=>el.classList.toggle('hidden',!all));
   if(all){
     data={};
-    document.querySelectorAll('#app input[type=text],#app textarea,#app select').forEach(el=>el.value='');
-    document.querySelectorAll('#app .chip').forEach(b=>b.setAttribute('aria-pressed','false'));
-    document.querySelectorAll('#app .card.saved').forEach(el=>el.classList.remove('saved'));
+    document.querySelectorAll('#app input[type=text],#app textarea').forEach(el=>el.value='');
+    syncChips();
+    document.querySelectorAll('#app .pg.saved').forEach(el=>el.classList.remove('saved'));
     document.querySelectorAll('#app .feedback').forEach(el=>el.textContent='');
     refreshDynamic();
-    document.querySelectorAll('#app .ans').forEach(el=>{
+    const sec=$('p'+lastShown);if(!sec)return;
+    sec.querySelectorAll('.ans').forEach(el=>{
       const key=el.dataset.for, kind=el.dataset.kind;
+      if(kind==='multi'){const ks=key.split(',');
+        el.innerHTML=`<div class="hd">학생 ${tRows.length}명 중</div>`+ks.map(k=>{const lab=(CHECKS.find(x=>x[0]===k)||[k,k==='up_padlet'?'패들렛':k==='up_kiwi'?'키위런':k])[1];const rs=tRows.filter(r=>r.data[k]);
+          return `<div class="bar"><span class="lab">${esc(lab)} ${rs.length}명</span><span class="nm">${tRows.filter(r=>!r.data[k]).length?'아직: '+tRows.filter(r=>!r.data[k]).map(nameOf).map(esc).join(', '):''}</span></div>`}).join('');return}
       const got=tRows.filter(r=>{const v=r.data[key];return v!=null&&String(v).trim()!==''});
       let h=`<div class="hd">학생 답 ${got.length}/${CONFIG.NUMBERS.length}명</div>`;
       if(!got.length){el.innerHTML=h+'<div class="empty">아직 없어요</div>';return}
       if(kind==='chip'){
         const g={};got.forEach(r=>{(g[r.data[key]]=g[r.data[key]]||[]).push(r)});
         const ansKey=(QUIZ.find(q=>q.k===key)||{}).ans;
-        h+=Object.entries(g).sort((a,b)=>b[1].length-a[1].length).map(([v,rs])=>`<div class="bar"><span class="lab">${v===ansKey?'✅ ':''}${esc(key==='partner'?v+'번':v)} ${rs.length}명</span><span class="nm">${rs.map(nameOf).map(esc).join(', ')}</span></div>`).join('');
+        h+=Object.entries(g).sort((a,b)=>b[1].length-a[1].length).map(([v,rs])=>`<div class="bar"><span class="lab">${v===ansKey?'✅ ':''}${esc(v)} ${rs.length}명</span><span class="nm">${rs.map(nameOf).map(esc).join(', ')}</span></div>`).join('');
       }else{
         h+=got.map(r=>{const v=String(r.data[key]);const id=r.num+'|'+key;const nw=prevAns[id]!==undefined&&prevAns[id]!==v;prevAns[id]=v;
-          return `<div class="it${nw?' new':''}"><b>${esc(nameOf(r))}</b>${esc(v)}</div>`}).join('');
+          const short=key==='myArticle'&&v.length>120?v.slice(0,120)+'…':v;
+          return `<div class="it${nw?' new':''}"><b>${esc(nameOf(r))}</b>${esc(short)}</div>`}).join('');
       }
       el.innerHTML=h;
     });
   }else{
     const r=tRows.find(x=>x.num===tWho);const d=r?r.data:{};
     data=Object.assign({},d);
-    document.querySelectorAll('#app input[type=text],#app textarea,#app select').forEach(el=>{if(el.id)el.value=d[el.id]||''});
-    document.querySelectorAll('#app .chips[data-key]').forEach(w=>{const v=d[w.dataset.key];w.querySelectorAll('.chip').forEach(b=>b.setAttribute('aria-pressed',b.dataset.val===v?'true':'false'))});
-    markSaved();refreshDynamic();
+    document.querySelectorAll('#app input[type=text],#app textarea').forEach(el=>{if(el.id)el.value=d[el.id]||''});
+    syncChips();markSaved();refreshDynamic();
   }
 }
-function renderStrip(){
+function renderList(){
   const byNum={};tRows.forEach(r=>byNum[r.num]=r);
-  const tp=tState.page==='free'?null:+tState.page;
-  const sel=$('tWho');
-  sel.innerHTML='<option value="all">👥 모든 학생 답 모아 보기</option>'+CONFIG.NUMBERS.map(n=>{const r=byNum[String(n)];return `<option value="${n}">👤 ${n}번 ${r?esc(r.name):'(안 들어옴)'}</option>`}).join('');
-  sel.value=tWho;
-  $('tStrip').innerHTML=CONFIG.NUMBERS.map(n=>{const r=byNum[String(n)];
-    if(!r)return `<button class="off" data-n="${n}"><b>${n}번</b>미접속</button>`;
-    const d=r.data,pg=+d._page||0,idle=d._at&&(Date.now()-new Date(d._at))>120000,behind=tp!=null&&pg<tp,done=(d.done||{})['p'+pg];
-    const f=pageFill(d,pg);
-    return `<button data-n="${n}" class="${String(n)===tWho?'on':''} ${idle?'idle':''} ${behind?'behind':''} ${done?'ok':''}"><b>${n} ${esc(r.name)}</b>${pg}쪽${f?` · ${f[0]}/${f[1]}`:''}${done?' ✅':''}</button>`}).join('');
-  $('tStrip').querySelectorAll('button').forEach(b=>b.onclick=()=>{const n=b.dataset.n;tWho=(tWho===n)?'all':n;renderStrip();renderMirror()});
-  $('tUpd2').textContent=new Date().toLocaleTimeString('ko-KR')+' 기준';
+  const c=curPage();
+  let cnt=0;
+  const rows=CONFIG.NUMBERS.map(n=>{const r=byNum[String(n)];
+    if(!r)return {n,html:`<div class="srow off" data-n="${n}"><span class="n">${n}</span><span class="nm">미접속</span><span class="sst"></span></div>`,ord:3};
+    const d=r.data,pg=+d._page||0,idle=d._at&&(Date.now()-new Date(d._at))>120000,behind=c!=null&&pg<c,done=!!(d.done||{})['p'+(c??pg)];
+    if(done)cnt++;
+    const f=pageFill(d,c??pg)||[0,1];
+    return {n,ord:0,html:`<div class="srow ${String(n)===tWho?'sel':''} ${idle?'idle':''} ${behind?'behind':''} ${done?'done':''}" data-n="${n}"><span class="n">${n}</span><span class="nm">${esc(r.name)}</span><span class="sst">${pg}쪽 ${done?'✅':`${f[0]}/${f[1]}`}</span><div class="bar3"><i style="width:${f[1]?Math.min(100,f[0]/f[1]*100):0}%"></i></div></div>`}});
+  $('tList').innerHTML=rows.map(x=>x.html).join('');
+  $('tCnt').textContent=c==null?`${tRows.length}명 접속`:`이 페이지 다 했어요 ${cnt}/${CONFIG.NUMBERS.length}`;
+  $('tList').querySelectorAll('.srow').forEach(b=>b.onclick=()=>{const n=b.dataset.n;if(b.classList.contains('off'))return;tWho=(tWho===n)?'all':n;renderList();renderMirror()});
 }
 async function resetAllT(){
-  const ans=prompt('11차시 학생 기록이 모두 지워지고 되살릴 수 없어요.\n정말 지우려면 리셋 이라고 쓰세요.');
+  const ans=prompt('화요일·수요일 학생 기록이 모두 지워지고 되살릴 수 없어요.\n정말 지우려면 리셋 이라고 쓰세요.');
   if(ans===null)return;
   if(ans.trim()!=='리셋'){toast('리셋하지 않았어요');return}
   const id=String(Date.now());await DB.reset(id);
-  tState=normState({resetId:id});tRows=[];holdUntil=Date.now()+5000;markT();scheduleRender();toast('11차시 기록을 지웠어요');
+  tState=normState({resetId:id});tRows=[];holdUntil=Date.now()+4000;afterState();scheduleRender();toast('기록을 지웠어요');
 }
 
 /* ===================== TV 화면 ===================== */
@@ -989,7 +1252,7 @@ function openTV(fromTeacher){
   if(document.documentElement.requestFullscreen&&fromTeacher)document.documentElement.requestFullscreen().catch(()=>{});
 }
 function closeTV(){
-  $('tv').classList.add('hidden');$('tvBar').classList.add('hidden');$('hdr').classList.remove('hidden');
+  $('tv').classList.add('hidden');$('tvBar').classList.add('hidden');
   if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});
 }
 function showBar(){const b=$('tvBar');b.classList.add('show');clearTimeout(barTimer);barTimer=setTimeout(()=>b.classList.remove('show'),3000)}
