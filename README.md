@@ -1,5 +1,6 @@
-학생: https://aslegend.github.io/online-sheet/news10.html
+학생: https://aslegend.github.io/online-sheet/news11.html
 
-교사: https://aslegend.github.io/online-sheet/news10.html?teacher
+교사: https://aslegend.github.io/online-sheet/news11.html?teacher
 
-TV: https://aslegend.github.io/online-sheet/news10.html?tv
+TV: https://aslegend.github.io/online-sheet/news11.html?tv
+
