@@ -22,6 +22,7 @@ const CONFIG = {
     appId: "1:303995332009:web:b0529dc8616c873f5a10b8"
   },
   SCRIPT_URL: "https://script.google.com/macros/s/AKfycby3Fzy-w6SHcjyMINxWNKunOkNvUa1pAypE_csWeHQ8QfK9Byr_p38tSqs9rx7PWD2p/exec",
+  PADLET_URL: "https://padlet.com/aslegend1/6-s024f7gdk9b3n5gwaac0",  // 학급 신문 패들렛
   NUMBERS: [1,2,3,4,5,7,8,9,10,11,12,13],  // 우리 반 번호(6번 없음)
   TEACHER_PIN: "1004",       // 교사·TV 화면 비밀번호 — Code.gs의 PIN과 같게
   POLL_MS: 3000,             // (구글 시트일 때) 학생 화면이 페이지를 확인하는 간격
@@ -368,6 +369,13 @@ body.tmode header{display:none}
 .ccard .g3 .chip{padding:6px 10px;font-size:14px}
 @media (max-width:1100px){.ccard .g3{grid-template-columns:1fr 1fr}}
 .mirror .ccard .g3{grid-template-columns:1fr}
+.padbox{border:1.5px solid #f3c4d6;background:#fff5f9;border-radius:12px;padding:10px 12px;margin:10px 0}
+.padbox>b{display:block;margin-bottom:6px;color:#a3245a}
+.padrow{display:flex;gap:8px;flex-wrap:wrap}
+.padrow .btn{min-height:44px;font-size:15px;text-decoration:none;display:inline-flex;align-items:center}
+.padrow .btn.go{background:#d63c7a}
+.padhint{font-size:14px;color:var(--muted);margin-top:6px;line-height:1.5}
+.mirror .padbox{pointer-events:none}
 </style>
 </head>
 <body>
@@ -450,13 +458,16 @@ body.tmode header{display:none}
       <div class="todo"><b>📝 지금 할 일</b><ol>
         <li>태블릿 <b>카메라</b>로 교과서의 내 글을 비추고, <b>글자 인식(텍스트 추출)</b>을 눌러 <b>복사</b>해요.</li>
         <li>오른쪽 칸에 <b>붙여 넣고</b>, 잘못 인식된 글자만 바로잡아요. (내용은 고치지 않아요!)</li>
-        <li>같은 글을 <b>패들렛</b> 내 이름 칸에 올려요.</li>
+        <li>오른쪽 <b>📋 내 글 복사</b> → <b>📌 패들렛 열기</b>를 눌러 내 이름 칸에 올려요.</li>
         <li><b>키위런</b>에 붙여 넣고 <b>저장만</b> 해요. ⚠️ 'AI 피드백 받기'는 내일 눌러요!</li></ol></div>
       <div class="ref"><h4>📷 글자 인식이 안 되면</h4><div>갤러리에서 사진을 열고 'T'(텍스트 추출) 버튼을 누르거나, 직접 입력해도 돼요.</div></div>
     </div>
     <div class="main">
       <label class="q" for="myArticle">내 기사문 (붙여 넣기)</label>
       <textarea id="myArticle"></textarea>
+      <div class="padbox"><b>📌 패들렛에 올리기</b>
+        <div class="padrow"><button class="btn sm" type="button" data-copy="myArticle">① 📋 내 글 복사</button><a class="btn sm go padlink" target="_blank" rel="noopener">② 📌 패들렛 열기 ↗</a></div>
+        <div class="padhint">③ 패들렛 <b>내 이름 칸의 ＋</b> → 제목 칸에 <b>표제</b>를 쓰고, 본문 칸을 <b>길게 눌러 붙여넣기</b> → 게시. 다 올리면 이 화면으로 돌아와요.</div></div>
       <label class="q">올리고 저장했나요?</label>
       <div id="savedBox"></div>
       <div class="save-row"><button class="btn" data-save="p3">다 했어요</button></div>
@@ -557,12 +568,15 @@ body.tmode header{display:none}
       <div class="todo"><b>📝 지금 할 일</b><ol>
         <li>재도전 목표를 보며 <b>키위런</b>에서 내 기사문을 고쳐 써요.</li>
         <li>다시 <b>AI 피드백</b>을 받아 단계가 바뀌었는지 확인해요.</li>
-        <li><b>패들렛</b> 내 이름 칸에 제목 앞에 <b>[고친 글]</b>을 붙여 올려요.</li></ol></div>
+        <li>키위런에서 고친 글을 <b>전체 선택 → 복사</b>하고, <b>📌 패들렛 열기</b>를 눌러 내 이름 칸에 올려요. 제목 앞에 <b>[고친 글]</b>을 붙여요.</li></ol></div>
       <div class="goalbox" id="goalBox"></div>
     </div>
     <div class="main">
       <label class="q">고친 뒤 AI가 준 단계 (선택)</label>
       <table class="rate" id="ai2Tbl"></table>
+      <div class="padbox"><b>📌 고친 글 패들렛에 올리기</b>
+        <div class="padrow"><a class="btn sm go padlink" target="_blank" rel="noopener">📌 패들렛 열기 ↗</a></div>
+        <div class="padhint">내 이름 칸의 <b>＋</b> → 제목: <b>[고친 글] 내 표제</b> → 본문 칸에 키위런에서 복사한 글을 붙여넣기 → 게시</div></div>
       <label class="q">패들렛에 고친 글을 올렸나요?</label>
       <div id="postedBox"></div>
       <div class="save-row"><button class="btn" data-save="p8">다 했어요</button></div>
@@ -826,6 +840,15 @@ function rateTable(id,prefix,opts,thExtra){
 /* --- 화요일 --- */
 function buildP1(){bindText('myTitle','myTitle');bindText('mySub','mySub');const b=$('chkBox');b.innerHTML='';b.appendChild(tickGroup(CHECKS));}
 function buildP2(){$('rubricSide2').innerHTML=rubricSide();rateTable('preTbl','pre_',LEVELS);bindText('strong','strong');bindText('grow','grow');}
+function copyText(t){t=(t||'').trim();if(!t){toast('먼저 내 글을 붙여 넣어 주세요');return}
+  const ok=()=>toast('복사했어요! 패들렛 본문 칸에 붙여 넣어요');
+  const fb=()=>{const a=document.createElement('textarea');a.value=t;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();
+    try{document.execCommand('copy');ok()}catch(e){toast('복사가 안 돼요. 글 칸을 길게 눌러 복사해 주세요')}a.remove()};
+  if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(t).then(ok,fb);else fb();}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-copy]');if(!b||b.closest('.mirror'))return;
+  const el=$(b.dataset.copy);copyText(el?el.value:'')});
+function setPadLinks(){document.querySelectorAll('a.padlink').forEach(a=>{if(CONFIG.PADLET_URL)a.href=CONFIG.PADLET_URL;else a.style.display='none'})}
+document.addEventListener('DOMContentLoaded',setPadLinks);setTimeout(setPadLinks,0);
 function buildP3(){bindText('myArticle','myArticle');const b=$('savedBox');b.innerHTML='';b.appendChild(tickGroup([["up_padlet","📌 패들렛에 올렸어요"],["up_kiwi","💾 키위런에 저장했어요"]]));}
 /* --- 수요일 --- */
 function buildP4(){
