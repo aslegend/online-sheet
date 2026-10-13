@@ -658,8 +658,8 @@ body.tmode header{display:none}
 <div class="modal hidden" id="mMore"><div class="mbox">
   <div class="row"><b style="font-size:18px">⋯ 더보기</b><span class="note" id="tInfo"></span><button class="btn ghost sm" style="margin-left:auto" data-close>닫기</button></div>
   <div class="pagebtns" style="margin:12px 0">
-    <button class="btn" id="tvOpen">🪟 TV 창 열기(새 창)</button>
-    <button class="btn" id="tvHere">🖥 이 화면을 TV 모드로</button>
+    <button class="btn" id="tvOpen" style="display:none">🪟 TV 창 열기(새 창)</button>
+    <button class="btn" id="tvHere">📺 TV 화면 새 창으로 열기</button>
     <button class="btn ghost" id="tCsv">⬇️ 기록 CSV 저장</button>
     <button class="btn" id="tReset" style="background:var(--warn)">🧨 기록 지우고 처음으로</button>
   </div>
@@ -1034,18 +1034,19 @@ async function start(){
 /* ===================== 교사 화면 ===================== */
 let tRows=[], tState=normState(), holdUntil=0, tWho='all', prevAns={}, rTimer=null;
 async function setState(patch){await DB.setState(patch)}
+const tvLab=v=>(v.pg?(/\d/.test(v.pg)?v.pg+"번":v.pg)+" │ ":"")+v.label;
 const TV_VIEWS = {
-  pre:    {label:"🪞 처음 자기평가", title:"우리 반 처음 자기평가", render:rows=>tvDist(rows,'pre_')},
-  pick:   {label:"🗳 어떤 기사를 먼저?", title:"어떤 기사를 먼저 읽고 싶나요?", render:tvPick},
-  focus:  {label:"🔎 살펴볼 기준", title:"오늘 짝에게 봐 달라고 할 기준", render:tvFocus},
-  rubric: {label:"📋 평가 기준표", title:"우리 반 평가 기준", render:()=>rubricHTML()},
-  compare:{label:"⚖️ 짝 vs AI", title:"짝과 AI의 의견을 비교해 보니", render:tvCompare},
-  ai:     {label:"🤖 AI 단계", title:"AI가 준 단계 (처음 글)", render:rows=>tvDist(rows,'ai_')},
-  goals:  {label:"🎯 재도전 목표", title:"우리 반 재도전 목표", render:tvGoals},
-  growth: {label:"📈 처음 → 고친 뒤", title:"처음 글과 고친 글 자기평가", render:tvGrowth},
-  reflect:{label:"💬 돌아보기", title:"무엇을 어떻게 고쳤나요?", render:tvReflect},
-  quiz:   {label:"✅ 확인 문항", title:"기사문 요소 확인 정답률", render:tvQuiz},
-  progress:{label:"🚦 진행 상황", title:"지금 어디까지 했나요?", render:tvProgress}
+  pre:    {pg:"2·5", label:"🪞 처음 자기평가", title:"우리 반 처음 자기평가", render:rows=>tvDist(rows,'pre_')},
+  pick:   {pg:"4", label:"🗳 어떤 기사를 먼저?", title:"어떤 기사를 먼저 읽고 싶나요?", render:tvPick},
+  focus:  {pg:"5", label:"🔎 살펴볼 기준", title:"오늘 짝에게 봐 달라고 할 기준", render:tvFocus},
+  rubric: {pg:"전체", label:"📋 평가 기준표", title:"우리 반 평가 기준", render:()=>rubricHTML()},
+  compare:{pg:"7", label:"⚖️ 짝 vs AI", title:"짝과 AI의 의견을 비교해 보니", render:tvCompare},
+  ai:     {pg:"7", label:"🤖 AI 단계", title:"AI가 준 단계 (처음 글)", render:rows=>tvDist(rows,'ai_')},
+  goals:  {pg:"7", label:"🎯 재도전 목표", title:"우리 반 재도전 목표", render:tvGoals},
+  growth: {pg:"9", label:"📈 처음 → 고친 뒤", title:"처음 글과 고친 글 자기평가", render:tvGrowth},
+  reflect:{pg:"9", label:"💬 돌아보기", title:"무엇을 어떻게 고쳤나요?", render:tvReflect},
+  quiz:   {pg:"9", label:"✅ 확인 문항", title:"기사문 요소 확인 정답률", render:tvQuiz},
+  progress:{pg:"전체", label:"🚦 진행 상황", title:"지금 어디까지 했나요?", render:tvProgress}
 };
 function sticky(t,c){return `<div class="sticky" style="${c?'background:'+c:''}">${esc(t)}</div>`}
 function tvPick(rows){
@@ -1155,10 +1156,10 @@ function teacher(){
   window._go=go;
   if(!LIVE){['tPrev','tNext','tFree'].forEach(id=>$(id).disabled=true)}
   $('tvToggle2').onclick=()=>setTV({show:!tState.tv.show});
-  const tv2=$('tvView2');tv2.innerHTML=Object.entries(TV_VIEWS).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join('');
+  const tv2=$('tvView2');tv2.innerHTML=Object.entries(TV_VIEWS).map(([k,v])=>`<option value="${k}">${tvLab(v)}</option>`).join('');
   tv2.onchange=()=>setTV({view:tv2.value,show:true});
   $('tvOpen').onclick=()=>window.open(location.pathname+'?tv','newsTV11');
-  $('tvHere').onclick=()=>{$('mMore').classList.add('hidden');openTV(true)};
+  $('tvHere').onclick=()=>{$('mMore').classList.add('hidden');const w=window.open(location.pathname+'?tv','newsTV11');if(!w)toast('팝업이 막혔어요. 브라우저에서 팝업을 허용해 주세요')};
   $('tCsv').onclick=csvT;$('tReset').onclick=resetAllT;
   DB.onState(s=>{if(Date.now()>holdUntil)tState=s;afterState()});
   DB.onRows(rows=>{tRows=fixNames(rows);scheduleRender()});
@@ -1293,7 +1294,7 @@ function buildBar(){
   const b=$('tvBar');b.innerHTML='';
   const add=(label,fn,cls)=>{const x=document.createElement('button');x.textContent=label;if(cls)x.className=cls;x.onclick=fn;b.appendChild(x);return x};
   add(tState.tv.show?'🙈 가리기':'👁 보이기',()=>setTV({show:!tState.tv.show}).then(buildBar),tState.tv.show?'hide':'');
-  Object.entries(TV_VIEWS).forEach(([k,v])=>add(v.label,()=>setTV({view:k,show:true}).then(buildBar),tState.tv.view===k?'cur':''));
+  Object.entries(TV_VIEWS).forEach(([k,v])=>add(tvLab(v),()=>setTV({view:k,show:true}).then(buildBar),tState.tv.view===k?'cur':''));
   if(tvFromTeacher)add('← 교사 화면',closeTV);
 }
 function renderTV(){
@@ -1308,8 +1309,11 @@ function renderTV(){
 DB.init();
 const QS=new URLSearchParams(location.search);
 if(QS.has('teacher')||QS.has('tv')){
-  const pin=prompt(QS.has('tv')?'TV 화면 비밀번호':'교사 비밀번호');
+  let fromT=false;try{fromT=!!(window.opener&&window.opener.__tok===true)}catch(e){}
+  try{if(QS.has('tv')&&sessionStorage.getItem(NS+'_tok')==='1')fromT=true}catch(e){}
+  const pin=fromT?CONFIG.TEACHER_PIN:prompt(QS.has('tv')?'TV 화면 비밀번호':'교사 비밀번호');
   if(pin===CONFIG.TEACHER_PIN){
+    window.__tok=true;try{sessionStorage.setItem(NS+'_tok','1')}catch(e){}
     if(QS.has('tv')){$('loginWrap').classList.add('hidden');openTV(false)}else teacher();
   }else toast('비밀번호가 달라요');
 }else{
