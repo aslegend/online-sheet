@@ -23,7 +23,8 @@ const CONFIG = {
   },
   SCRIPT_URL: "https://script.google.com/macros/s/AKfycby3Fzy-w6SHcjyMINxWNKunOkNvUa1pAypE_csWeHQ8QfK9Byr_p38tSqs9rx7PWD2p/exec",
   PADLET_URL: "https://padlet.com/aslegend1/6-s024f7gdk9b3n5gwaac0",  // 학급 신문 패들렛
-  NUMBERS: [1,2,3,4,5,7,8,9,10,11,12,13],  // 우리 반 번호(6번 없음)
+  NUMBERS: [1,2,3,4,5,7,8,9,10,11,12,13],
+  NAMES: {1:"김라엘",2:"김미소",3:"김하연",4:"박소율",5:"오다윤",7:"이동하",8:"이민우",9:"이서영",10:"정다인",11:"최지원",12:"김호영",13:"박정훈"},  // 교사 화면 이름(학생이 잘못 입력해도 이 이름으로 표시)  // 우리 반 번호(6번 없음)
   TEACHER_PIN: "1004",       // 교사·TV 화면 비밀번호 — Code.gs의 PIN과 같게
   POLL_MS: 3000,             // (구글 시트일 때) 학생 화면이 페이지를 확인하는 간격
   LIVE_MS: 3000,             // (구글 시트일 때) 교사·TV 화면 새로 고침 간격
@@ -376,6 +377,9 @@ body.tmode header{display:none}
 .padrow .btn.go{background:#d63c7a}
 .padhint{font-size:14px;color:var(--muted);margin-top:6px;line-height:1.5}
 .mirror .padbox{pointer-events:none}
+.ans{font-size:15px}
+.ans .it.long{white-space:pre-wrap;line-height:1.6;max-height:320px;overflow:auto;background:#fff;border:1px solid #d5e0f3;border-radius:8px;padding:6px 10px;margin:6px 0}
+.mirror textarea{font-size:16px;line-height:1.6;overflow:hidden}
 </style>
 </head>
 <body>
@@ -1157,7 +1161,7 @@ function teacher(){
   $('tvHere').onclick=()=>{$('mMore').classList.add('hidden');openTV(true)};
   $('tCsv').onclick=csvT;$('tReset').onclick=resetAllT;
   DB.onState(s=>{if(Date.now()>holdUntil)tState=s;afterState()});
-  DB.onRows(rows=>{tRows=rows;scheduleRender()});
+  DB.onRows(rows=>{tRows=fixNames(rows);scheduleRender()});
   setInterval(renderList,15000);
 }
 function renderPageGrid(){
@@ -1204,6 +1208,8 @@ function addSlots(){
   document.querySelectorAll('#app .chips[data-multi]').forEach(el=>mk(el,el.dataset.multi,'multi'));
 }
 const nameOf=r=>`${r.num}번 ${r.name||''}`.trim();
+function fixNames(rows){const N=CONFIG.NAMES||{};return (rows||[]).map(r=>N[r.num]?Object.assign({},r,{name:N[r.num]}):r)}
+function fitAreas(){document.querySelectorAll('#app textarea').forEach(el=>{el.style.height='auto';if(el.value)el.style.height=Math.min(el.scrollHeight+6,900)+'px';else el.style.height=''})}
 function renderMirror(){
   const all=tWho==='all';
   const v=$('tViewing');
@@ -1214,7 +1220,7 @@ function renderMirror(){
   if(all){
     data={};
     document.querySelectorAll('#app input[type=text],#app textarea').forEach(el=>el.value='');
-    syncChips();
+    syncChips();fitAreas();
     document.querySelectorAll('#app .pg.saved').forEach(el=>el.classList.remove('saved'));
     document.querySelectorAll('#app .feedback').forEach(el=>el.textContent='');
     refreshDynamic();
@@ -1233,8 +1239,8 @@ function renderMirror(){
         h+=Object.entries(g).sort((a,b)=>b[1].length-a[1].length).map(([v,rs])=>`<div class="bar"><span class="lab">${v===ansKey?'✅ ':''}${esc(v)} ${rs.length}명</span><span class="nm">${rs.map(nameOf).map(esc).join(', ')}</span></div>`).join('');
       }else{
         h+=got.map(r=>{const v=String(r.data[key]);const id=r.num+'|'+key;const nw=prevAns[id]!==undefined&&prevAns[id]!==v;prevAns[id]=v;
-          const short=key==='myArticle'&&v.length>120?v.slice(0,120)+'…':v;
-          return `<div class="it${nw?' new':''}"><b>${esc(nameOf(r))}</b>${esc(short)}</div>`}).join('');
+          const lg=v.length>60;
+          return `<div class="it${nw?' new':''}${lg?' long':''}"><b>${esc(nameOf(r))}</b>${lg?'<br>':''}${esc(v)}</div>`}).join('');
       }
       el.innerHTML=h;
     });
@@ -1242,7 +1248,7 @@ function renderMirror(){
     const r=tRows.find(x=>x.num===tWho);const d=r?r.data:{};
     data=Object.assign({},d);
     document.querySelectorAll('#app input[type=text],#app textarea').forEach(el=>{if(el.id)el.value=d[el.id]||''});
-    syncChips();markSaved();refreshDynamic();
+    syncChips();markSaved();refreshDynamic();fitAreas();
   }
 }
 function renderList(){
@@ -1272,7 +1278,7 @@ let tvFromTeacher=false, barTimer=null;
 function openTV(fromTeacher){
   tvFromTeacher=fromTeacher;
   $('hdr').classList.add('hidden');$('tv').classList.remove('hidden');$('tvBar').classList.remove('hidden');
-  if(!fromTeacher){DB.onState(s=>{if(Date.now()>holdUntil)tState=s;renderTV();buildBar()});DB.onRows(rows=>{tRows=rows;renderTV()})}
+  if(!fromTeacher){DB.onState(s=>{if(Date.now()>holdUntil)tState=s;renderTV();buildBar()});DB.onRows(rows=>{tRows=fixNames(rows);renderTV()})}
   renderTV();buildBar();
   document.addEventListener('mousemove',e=>{if(e.clientY>innerHeight-160)showBar()});
   document.addEventListener('touchstart',showBar);
